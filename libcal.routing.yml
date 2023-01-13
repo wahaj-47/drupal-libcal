@@ -1,0 +1,7 @@
+libcal.form:
+  path: "/admin/config/development/libcal"
+  defaults:
+    _form: '\Drupal\libcal\Form\LibCalConfigForm'
+    _title: "LibCal API Settings"
+  requirements:
+    _permission: "administer site configuration"

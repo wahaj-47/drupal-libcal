@@ -1,0 +1,5 @@
+libcal.form:
+  title: "LibCal"
+  route_name: libcal.form
+  description: "Configure LibCal Integration in Drupal."
+  parent: system.admin_config_development

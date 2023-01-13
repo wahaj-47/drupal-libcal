@@ -1,0 +1,77 @@
+@import "./config/variables.scss";
+
+#reserve-space {
+  .day {
+    height: 7vw;
+  }
+
+  .column {
+    width: 50%;
+    padding: 12px;
+    h3 {
+      font-size: xx-large;
+    }
+  }
+
+  .indicator {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      margin: 0;
+    }
+    .available {
+      color: black;
+    }
+  }
+
+  .selected {
+    border: 4px solid $lsupurple;
+    h1 {
+      color: $lsupurple !important;
+    }
+  }
+
+  .slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid lightgray;
+    margin: 4px 0;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    h4 {
+      font-size: 16px;
+      margin: 0;
+      color: black;
+    }
+  }
+
+  .slot-selected {
+    border-color: $lsupurple;
+    h4 {
+      color: $lsupurple;
+    }
+  }
+
+  .disabled {
+    h4 {
+      color: lightgray;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .day {
+      height: 10vw;
+    }
+    .column {
+      width: 100%;
+    }
+    .selected {
+      border: 2px solid $lsupurple;
+    }
+  }
+}
