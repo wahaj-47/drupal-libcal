@@ -1,0 +1,5 @@
+libcal:
+  host: ""
+  client_id: ""
+  client_secret: ""
+  calendar_ids: ""

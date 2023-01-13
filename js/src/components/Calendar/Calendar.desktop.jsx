@@ -1,0 +1,101 @@
+import React, { useState, useRef } from "react";
+
+import Slider from "react-slick";
+import moment from "moment";
+
+const daysOfTheWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const Calendar = ({
+  renderChild = () => {
+    return null;
+  },
+  onDateSelected = () => {},
+  datesToRender,
+  showDay = true,
+}) => {
+  const [selectedDate, setDate] = useState(moment());
+  const slick = useRef(null);
+
+  const goToSlide = (direction) => () => {
+    switch (direction) {
+      case "prev":
+        slick.current.slickPrev();
+        break;
+      case "next":
+        slick.current.slickNext();
+        break;
+    }
+  };
+
+  const handleDateSelection = (date) => () => {
+    setDate(date);
+    onDateSelected(date);
+  };
+
+  const updateHeader = (index) => {
+    setDate(moment(datesToRender[index * 5]));
+  };
+
+  return (
+    <div className="box">
+      <div className="calendar-header">
+        <h1>{selectedDate.format("MMMM YYYY")}</h1>
+        <div>
+          <i
+            role="button"
+            onClick={goToSlide("prev")}
+            className="fa-solid fa-chevron-left"
+          ></i>
+          <h1 onClick={goToSlide("today")}>{selectedDate.format("Do MMM")}</h1>
+          <i
+            role="button"
+            onClick={goToSlide("next")}
+            className="fa-solid fa-chevron-right"
+          ></i>
+        </div>
+      </div>
+      <div id="weekHeader">
+        {daysOfTheWeek.map((day) => (
+          <div className="dayLetter">
+            <h1>{day}</h1>
+          </div>
+        ))}
+      </div>
+
+      <Slider
+        ref={slick}
+        slidesToShow={7}
+        slidesToScroll={7}
+        initialSlide={0}
+        infinite={false}
+        rows={5}
+        arrows={false}
+        afterChange={updateHeader}
+        className="slider"
+      >
+        {datesToRender.map((date) => (
+          <div
+            key={date.format("mmDDyyyy")}
+            onClick={handleDateSelection(date)}
+            className="day"
+          >
+            {showDay ? (
+              <div
+                className={`${
+                  selectedDate.isSame(date, "day") ? "selectedDay" : ""
+                } ${
+                  selectedDate.isSame(date, "month") ? "selectedMonth" : ""
+                } dayOfMonth`}
+              >
+                <h1>{date.format("DD")}</h1>
+              </div>
+            ) : null}
+            {renderChild(date)}
+          </div>
+        ))}
+      </Slider>
+    </div>
+  );
+};
+
+export default Calendar;
