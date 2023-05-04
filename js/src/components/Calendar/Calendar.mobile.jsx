@@ -65,19 +65,19 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
             <h1>{date.format("dd")}</h1>
             <h1
               className={
-                selectedDate.isSame(date, "day") ? "selectedDay" : undefined
+                selectedDate.isSame(date, "day") ? "selected-day" : undefined
               }
             >
               {date.format("DD")}
-              <div className="eventDots">{renderDots(date)}</div>
+              <div className="event-dots">{renderDots(date)}</div>
             </h1>
           </div>
         ))}
       </Slider>
-      <div id="listHeader">
+      <div id="list-header">
         <h2>{selectedDate.format("dddd, MMMM D")}</h2>
       </div>
-      <div id="eventList">{renderChild(selectedDate)}</div>
+      <div id="event-list">{renderChild(selectedDate)}</div>
     </div>
   );
 };

@@ -54,7 +54,7 @@ const EventsList = ({ collapsed }) => {
     <Fragment>
       <div
         ref={setTriggerRef}
-        className={`event eventCollapse eventStart eventEnd`}
+        className={`event event-collapse event-start event-end`}
       >
         {collapsed.length} more
       </div>
@@ -112,8 +112,8 @@ const Calendar = ({ events, datesToRender }) => {
               backgroundColor: `transparent`,
             }}
             className={`event ${
-              date.isSame(event.start, "day") ? "eventStart" : undefined
-            } ${date.isSame(event.end, "day") ? "eventEnd" : undefined}`}
+              date.isSame(event.start, "day") ? "event-start" : undefined
+            } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
           ></div>
         );
 

@@ -15,17 +15,17 @@ const Event = ({ event, date }) => {
     <div
       key={event.id}
       className={`event event-mobile${
-        date.isSame(event.start, "day") ? " eventStart" : ""
-      }${date.isSame(event.end, "day") ? " eventEnd" : ""}`}
+        date.isSame(event.start, "day") ? " event-start" : ""
+      }${date.isSame(event.end, "day") ? " event-end" : ""}`}
       onClick={toggleDetails}
     >
       <div className="header">
         <div className="left">
           <div
             style={{ backgroundColor: `${event.color}` }}
-            className="colorBar"
+            className="color-bar"
           ></div>
-          <p className="eventTitle">
+          <p className="event-title">
             {event.start.format("hh:mmA")} - {event.title}
           </p>
         </div>

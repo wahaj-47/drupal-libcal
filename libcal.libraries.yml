@@ -36,23 +36,23 @@ events_calendar:
   version: VERSION
   css:
     theme:
-      dist/events.css: {}
+      dist/libcal-events.css: {}
   js:
-    dist/events.min.js: { minified: true }
+    dist/libcal-events.min.js: { minified: true }
 
 reserve_space:
   version: VERSION
   css:
     theme:
-      dist/reserve.css: {}
-      dist/events.css: {}
+      dist/libcal-reserve.css: {}
+      dist/libcal-events.css: {}
   js:
-    dist/reserve.min.js: { minified: true }
+    dist/libcal-reserve.min.js: { minified: true }
 
 spaces:
   version: VERSION
   css:
     theme:
-      dist/spaces.css: {}
+      dist/libcal-spaces.css: {}
   js:
-    dist/spaces.min.js: { minified: true }
+    dist/libcal-spaces.min.js: { minified: true }

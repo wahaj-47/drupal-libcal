@@ -1,0 +1,248 @@
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./scss/events.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+.section {
+  padding: 0 !important;
+}
+
+.events-container {
+  margin: 12px 0;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+}
+.box h1 {
+  font-size: 20px !important;
+}
+.box .calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px i;
+  margin-bottom-cursor: pointer;
+}
+.box .calendar-header div {
+  display: flex;
+  align-items: center;
+}
+.box .calendar-header div h1 {
+  margin: 0 10px !important;
+  margin-bottom: 0 !important;
+  cursor: pointer;
+}
+
+.day {
+  display: block !important;
+  height: 150px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-collapse: collapse;
+  cursor: pointer;
+}
+.day .dayOfMonth {
+  margin-bottom: 5px;
+  padding: 3px;
+}
+.day h1 {
+  color: lightgrey;
+  display: inline;
+}
+.day h1:first-of-type {
+  font-size: 16px !important;
+}
+.day .selectedMonth h1 {
+  color: black;
+}
+.day .selectedDay {
+  background-color: #461d7c;
+  border-bottom-right-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.day .selectedDay h1 {
+  color: white;
+}
+
+.tooltip-container {
+  max-width: 576px;
+  padding: 16px;
+}
+.tooltip-container h1 {
+  color: black;
+  padding: 0;
+  font-weight: bold;
+  max-width: 65%;
+}
+.tooltip-container .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tooltip-container .body {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, max-height 0.2s;
+}
+.tooltip-container .expand {
+  max-height: 1000px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.event {
+  display: flex;
+  align-items: center;
+  color: white;
+  height: 35px;
+  margin-bottom: 5px;
+}
+.event p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 !important;
+}
+
+.eventCollapse {
+  color: grey;
+  border: 1px solid lightgray;
+}
+
+.eventStart {
+  padding-left: 10px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.eventEnd {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.event-mobile {
+  color: black;
+  border-bottom: 1px solid lightgray;
+  border-radius: 0;
+  padding: 10px;
+  cursor: pointer;
+  flex-direction: column;
+  height: auto;
+}
+.event-mobile .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.event-mobile .header .left {
+  display: flex;
+  align-items: center;
+}
+.event-mobile .eventTitle {
+  width: 224px;
+}
+.event-mobile .body {
+  width: 100%;
+  margin-top: 8px;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s, max-height 0.2s;
+}
+.event-mobile .body .description img {
+  width: auto !important;
+  height: auto !important;
+}
+.event-mobile .body p {
+  width: 100%;
+  white-space: normal;
+  overflow: visible;
+}
+.event-mobile .expand {
+  max-height: 1000px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.colorBar {
+  min-height: 30px;
+  width: 5px !important;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+#eventList {
+  min-height: 200px;
+}
+
+#weekHeader {
+  display: flex;
+  padding: 0;
+}
+#weekHeader .dayLetter {
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+#weekHeader .dayLetter h1 {
+  margin: 0;
+  padding: 5px;
+}
+
+#listHeader {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  padding: 10px;
+}
+
+.day-mobile {
+  border: none;
+  height: auto;
+}
+.day-mobile h1 {
+  display: block;
+  color: black;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px;
+}
+.day-mobile .selectedDay {
+  border-radius: 5px;
+}
+.day-mobile .eventDots {
+  flex: 1;
+  flex-direction: row;
+  display: flex;
+  justify-content: center;
+}
+.day-mobile .dot {
+  width: 4px;
+  height: 4px;
+  margin: 1px;
+  border-radius: 50%;
+}
+.day-mobile .selectedDay {
+  background-color: #461d7c;
+  border-bottom-right-radius: 5px;
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  .day h1:first-of-type {
+    font-size: 12px !important;
+  }
+  .box h1 {
+    font-size: 16px !important;
+  }
+}
+
+/*# sourceMappingURL=events.css.map*/

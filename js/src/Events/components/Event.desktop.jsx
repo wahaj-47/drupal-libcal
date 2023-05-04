@@ -11,19 +11,23 @@ const Event = ({ event, date }) => {
     visible,
   } = usePopperTooltip({
     placement: "auto",
-    followCursor: true,
+    followCursor: false,
+    interactive: true,
   });
 
   return (
     <Fragment key={event.id + date.format("mmddyyyy")}>
       <div
+        onClick={() => {
+          location.href = event.url.public;
+        }}
         ref={setTriggerRef}
         style={{
           backgroundColor: `${event.color}`,
         }}
         className={`event  ${
-          date.isSame(event.start, "day") ? "eventStart" : undefined
-        } ${date.isSame(event.end, "day") ? "eventEnd" : undefined}`}
+          date.isSame(event.start, "day") ? "event-start" : undefined
+        } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
       >
         {date.isSame(event.start, "day") ? <p>{event.title}</p> : null}
       </div>

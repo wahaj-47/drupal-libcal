@@ -1,0 +1,135 @@
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./scss/spaces.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
+#space-container {
+  display: flex;
+  max-height: 100vh;
+}
+
+.space-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.space-column {
+  padding: 12px;
+  overflow-y: scroll;
+  flex: 1;
+}
+
+#filters {
+  padding: 12px;
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#filters::-webkit-scrollbar {
+  display: none;
+}
+
+#selected-room {
+  flex: 2;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#selected-room::-webkit-scrollbar {
+  display: none;
+}
+
+.label {
+  margin-left: 4px;
+}
+
+.space-room {
+  background-color: white;
+  padding: 12px;
+  box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
+}
+.space-room .preview-img {
+  width: 100%;
+  margin-bottom: 12px;
+  max-height: 50vh;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.space-room h4 {
+  color: #818181;
+  font-size: large;
+}
+.space-room p {
+  text-transform: capitalize;
+}
+
+.space-room + .space-room {
+  margin-top: 12px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.accordion__item + .accordion__item {
+  border-top: 1px solid white;
+}
+
+.accordion__button {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+}
+
+.accordion__button:hover {
+  background-color: white;
+  color: black;
+}
+
+.accordion__button:before {
+  display: inline-block;
+  content: "";
+  height: 10px;
+  width: 10px;
+  margin-right: 12px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+.accordion__button[aria-expanded=true]::before,
+.accordion__button[aria-selected=true]::before {
+  transform: rotate(45deg);
+}
+
+[hidden] {
+  display: none;
+}
+
+.accordion__panel {
+  padding: 20px;
+  animation: fadein 0.35s ease-in;
+}
+
+/* -------------------------------------------------- */
+/* ---------------- Animation part ------------------ */
+/* -------------------------------------------------- */
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=spaces.css.map*/

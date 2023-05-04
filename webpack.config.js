@@ -1,13 +1,13 @@
 const path = require("path");
-const isDevMode = process.env.NODE_ENV !== "production";
+const isDevMode = false;
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = {
   entry: {
-    events: ["./js/src/Events/EventsCalendar.jsx", "./scss/events.scss"],
-    spaces: ["./js/src/Spaces.jsx", "./scss/spaces.scss"],
-    reserve: ["./js/src/ReserveSpace.jsx", "./scss/reserve-spaces.scss"],
+    "libcal-events": ["./js/src/Events/EventsCalendar.jsx", "./scss/libcal-events.scss"],
+    "libcal-spaces": ["./js/src/Spaces.jsx", "./scss/libcal-spaces.scss"],
+    "libcal-reserve": ["./js/src/ReserveSpace.jsx", "./scss/libcal-reserve-spaces.scss"],
   },
   devtool: isDevMode ? "source-map" : false,
   mode: isDevMode ? "development" : "production",

@@ -1,7 +1,7 @@
 @import "./config/variables.scss";
 
 .section {
-  padding: 0 !important;
+  //padding: 0 !important;
 }
 
 .events-container {
@@ -46,7 +46,7 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   border-collapse: collapse;
   cursor: pointer;
-  .dayOfMonth {
+  .day-of-month {
     margin-bottom: 5px;
     padding: 3px;
   }
@@ -57,12 +57,12 @@
   h1:first-of-type {
     font-size: 16px !important;
   }
-  .selectedMonth {
+  .selected-month {
     h1 {
       color: black;
     }
   }
-  .selectedDay {
+  .selected-day {
     background-color: $lsupurple;
     border-bottom-right-radius: 5px;
     width: fit-content;
@@ -117,12 +117,12 @@
   color: grey;
   border: 1px solid lightgray;
 }
-.eventStart {
+.event-start {
   padding-left: 10px;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
 }
-.eventEnd {
+.event-end {
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 }
@@ -144,7 +144,7 @@
       align-items: center;
     }
   }
-  .eventTitle {
+  .event-title {
     width: 224px;
   }
   .body {
@@ -172,17 +172,17 @@
     visibility: visible;
   }
 }
-.colorBar {
+.color-bar {
   min-height: 30px;
   width: 5px !important;
   border-radius: 10px;
   margin-right: 10px;
 }
-#eventList {
+#event-list {
   min-height: 200px;
 }
 
-#weekHeader {
+#week-header {
   display: flex;
   padding: 0;
   .dayLetter {
@@ -195,7 +195,7 @@
   }
 }
 
-#listHeader {
+#list-header {
   align-items: center;
   justify-content: center;
   display: flex;
@@ -212,10 +212,7 @@
     cursor: pointer;
     padding: 5px;
   }
-  .selectedDay {
-    border-radius: 5px;
-  }
-  .eventDots {
+  .event-dots {
     flex: 1;
     flex-direction: row;
     display: flex;
@@ -227,10 +224,11 @@
     margin: 1px;
     border-radius: 50%;
   }
-  .selectedDay {
+  .selected-day {
     background-color: $lsupurple;
     border-bottom-right-radius: 5px;
     color: white;
+    border-radius: 5px;
   }
 }
 

@@ -54,7 +54,7 @@ const Calendar = ({
           ></i>
         </div>
       </div>
-      <div id="weekHeader">
+      <div id="week-header">
         {daysOfTheWeek.map((day) => (
           <div className="dayLetter">
             <h1>{day}</h1>
@@ -82,10 +82,10 @@ const Calendar = ({
             {showDay ? (
               <div
                 className={`${
-                  selectedDate.isSame(date, "day") ? "selectedDay" : ""
+                  selectedDate.isSame(date, "day") ? "selected-day" : ""
                 } ${
-                  selectedDate.isSame(date, "month") ? "selectedMonth" : ""
-                } dayOfMonth`}
+                  selectedDate.isSame(date, "month") ? "selected-month" : ""
+                } day-of-month`}
               >
                 <h1>{date.format("DD")}</h1>
               </div>
