@@ -11,6 +11,7 @@ import axios from "axios";
 import moment from "moment";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { libcal } from "./services";
 
 const status = Object.freeze({
   processing: Symbol("processing"),
@@ -279,10 +280,7 @@ const ReserveSpace = () => {
     try {
       setIsReserving(status.processing);
 
-      const response = await axios.post(
-        "http://lwt3test.lsu.edu/api/libcal/space/reserve",
-        payload
-      );
+      const response = await libcal.reserve(payload);
 
       if (response.data.message.hasOwnProperty("booking_id")) {
         setIsReserving(status.successful);
@@ -293,6 +291,7 @@ const ReserveSpace = () => {
       fetchAvailibility();
     } catch (error) {
       console.log(error);
+      setIsReserving(status.failed);
     }
   };
 

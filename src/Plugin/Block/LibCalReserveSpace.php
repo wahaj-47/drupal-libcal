@@ -21,7 +21,7 @@ class LibCalReserveSpace extends BlockBase {
     $build['libcal_reserve_space'] = [
       '#markup' => '<div id="reserve-space"></div>',
       '#attached' => [
-        'library' => ['libcal/slick', 'libcal/tooltip', 'libcal/bulma', 'libcal/fontawesome', 'libcal/reserve_space']
+        'library' => ['libcal/slick', 'libcal/tooltip', 'libcal/fontawesome', 'libcal/reserve_space']
       ],
     ];
     return $build;

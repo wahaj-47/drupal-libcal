@@ -45,10 +45,21 @@ function generateDates(today = moment(), count = 70, flatten = false) {
 async function get(url) {
   try {
     const response = await axios.get(url);
-    return response.data.message;
+    if (response.data.hasOwnProperty("message"))
+      return response.data.message;
+    return response.data
   } catch (error) {
     console.log(error);
   }
 }
 
-export { getRandomColor, getWindowDimensions, generateDates, get };
+async function post(url, payload, config) {
+  try {
+    const response = await axios.post(url, payload, config);
+    return response
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { getRandomColor, getWindowDimensions, generateDates, get, post };

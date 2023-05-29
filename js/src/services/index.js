@@ -1,7 +1,9 @@
 import _ from "lodash";
-import { get } from "../helpers";
+import { get, post } from "../helpers";
 
 const origin = window.location.origin;
+
+console.log(origin);
 
 const libcal = {
   getCalendars: async () => {
@@ -28,6 +30,25 @@ const libcal = {
       `${origin}/api/libcal/space/item/${roomId}?availability=next`
     );
   },
+  getCsrfToken: async () => {
+    return await get(
+      `${origin}/session/token`
+    );
+  },
+  reserve: async (payload) => {
+
+    const csrfToken = await libcal.getCsrfToken()
+
+    return await post(
+      `${origin}/api/libcal/space/reserve`,
+      payload,
+      {
+        headers: {
+          "X-CSRF-Token": csrfToken,
+        },
+      }
+    );
+  }
 };
 
 export { origin, libcal };

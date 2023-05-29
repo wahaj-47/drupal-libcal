@@ -13,14 +13,12 @@ const Event = ({ event, date }) => {
     placement: "auto",
     followCursor: false,
     interactive: true,
+    trigger: "click",
   });
 
   return (
     <Fragment key={event.id + date.format("mmddyyyy")}>
       <div
-        onClick={() => {
-          location.href = event.url.public;
-        }}
         ref={setTriggerRef}
         style={{
           backgroundColor: `${event.color}`,
@@ -37,13 +35,21 @@ const Event = ({ event, date }) => {
           {...getTooltipProps({ className: "tooltip-container" })}
         >
           <div {...getArrowProps({ className: "tooltip-arrow" })} />
-          <div className="header">
+          <div
+            onClick={() => {
+              location.href = event.url.public;
+            }}
+            className="header"
+          >
             <h1>{event.title}</h1>
             <p>
               {event.start.format("hh:mmA")} - {event.end.format("hh:mmA")}
             </p>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: event.description }}></div>
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: event.description }}
+          ></div>
         </div>
       )}
     </Fragment>

@@ -142,7 +142,6 @@ class LibCal extends ResourceBase {
 
       $endpoint = $this->constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource);
 
-    
       $response = \Drupal::httpClient()->post($config->get('libcal.host')."/1.1/".$endpoint, [
           'headers' => [
               'Authorization' => 'Bearer '.$access_token
