@@ -21,7 +21,7 @@ class LibCalEvents extends BlockBase {
     $build['libcal_events'] = [
       '#markup' => '<div id="events-calendar"></div>',
       '#attached' => [
-        'library' => ['libcal/slick', 'libcal/tooltip', 'libcal/bulma', 'libcal/fontawesome', 'libcal/events_calendar']
+        'library' => ['libcal/slick', 'libcal/tooltip', 'libcal/fontawesome', 'libcal/events_calendar']
       ],
     ];
     return $build;

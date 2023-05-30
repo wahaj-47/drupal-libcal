@@ -16,13 +16,6 @@ tooltip:
       https://cdn.skypack.dev/react-popper-tooltip@4.4.2/dist/styles.css:
         { type: external }
 
-bulma:
-  version: 0.9.4
-  css:
-    theme:
-      https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css:
-        { type: external, minified: true }
-
 fontawesome:
   version: 6.2.0
   css:
