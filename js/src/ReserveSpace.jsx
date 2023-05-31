@@ -48,9 +48,9 @@ const ReserveSpace = () => {
   const fetchAvailibility = async () => {
     try {
       const spaceId = queryString.parse(location.search).id;
-      const response = await libcal.getAvailability(spaceId);
-
-      const room = { ...response.data.message[0] };
+      const data = await libcal.getAvailability(spaceId);
+      
+      const room = { ...data[0] };
       const availability = room.availability;
       setRoom({
         ...room,
