@@ -48,13 +48,7 @@ const ReserveSpace = () => {
   const fetchAvailibility = async () => {
     try {
       const spaceId = queryString.parse(location.search).id;
-      const response = await axios.get(
-        `http://lwt3test.lsu.edu/api/libcal/space/item/${spaceId}?availability=${moment()
-          .subtract(1, "day")
-          .format("YYYY-MM-DD")},${moment()
-          .add(70, "days")
-          .format("YYYY-MM-DD")}`
-      );
+      const response = await libcal.getAvailability(spaceId);
 
       const room = { ...response.data.message[0] };
       const availability = room.availability;

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { get, post } from "../helpers";
+import moment from "moment";
 
 const origin = window.location.origin;
 
@@ -34,6 +35,13 @@ const libcal = {
     return await get(
       `${origin}/session/token`
     );
+  },
+  getAvailability: async (spaceId) => {
+    return await get(`${origin}/api/libcal/space/item/${spaceId}?availability=${moment()
+      .subtract(1, "day")
+      .format("YYYY-MM-DD")},${moment()
+        .add(70, "days")
+        .format("YYYY-MM-DD")}`)
   },
   reserve: async (payload) => {
 
