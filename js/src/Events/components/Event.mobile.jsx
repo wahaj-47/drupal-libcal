@@ -30,7 +30,7 @@ const Event = ({ event, date }) => {
           </p>
         </div>
         <i
-          className={`fa-sharp fa-solid${
+          className={`fas${
             detailsVisible ? " fa-caret-up" : " fa-caret-down"
           }`}
         ></i>

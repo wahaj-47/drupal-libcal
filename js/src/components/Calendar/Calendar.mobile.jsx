@@ -37,12 +37,12 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
         <div>
           <i
             onClick={goToSlide("prev")}
-            className="fa-solid fa-chevron-left"
+            className="fas fa-chevron-left"
           ></i>
           <h1 onClick={goToSlide("today")}>Today</h1>
           <i
             onClick={goToSlide("next")}
-            className="fa-solid fa-chevron-right"
+            className="fas fa-chevron-right"
           ></i>
         </div>
       </div>

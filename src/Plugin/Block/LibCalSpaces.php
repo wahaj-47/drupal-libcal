@@ -21,7 +21,7 @@ class LibCalSpaces extends BlockBase {
     $build['libcal_spaces'] = [
       '#markup' => '<div id="spaces"></div>',
       '#attached' => [
-        'library' => ['libcal/fontawesome','libcal/spaces']
+        'library' => ['libcal/spaces']
       ],
     ];
     return $build;

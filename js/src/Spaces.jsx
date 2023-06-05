@@ -38,7 +38,7 @@ const Filters = ({ renderLocations, renderCategories }) => {
       >
         {collapsed ? (
           <h3>
-            <i className={`fa-solid fa-angles-right`}></i>
+            <i class="fas fa-angle-double-right"></i>
           </h3>
         ) : null}
         <h3
@@ -57,7 +57,7 @@ const Filters = ({ renderLocations, renderCategories }) => {
         </h3>
         {!collapsed ? (
           <h3>
-            <i className={`fa-solid fa-angles-left`}></i>
+            <i class="fas fa-angle-double-left"></i>
           </h3>
         ) : null}
       </div>

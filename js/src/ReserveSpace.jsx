@@ -175,7 +175,7 @@ const ReserveSpace = () => {
             disabled={selectedSlots.length < 1}
             className="ms-auto btn btn-outline-primary px-4"
           >
-            Next <i class="fa-solid fa-chevron-right"></i>
+            Next <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </motion.div>
@@ -199,7 +199,7 @@ const ReserveSpace = () => {
               setHasSelectedSlots(false);
             }}
           >
-            <i class="fa-solid fa-chevron-left"></i> Back
+            <i class="fas fa-chevron-left"></i> Back
           </p>
           <h4>Confirm reservation</h4>
           <div class="input-group mt-3 mb-3">
@@ -237,7 +237,7 @@ const ReserveSpace = () => {
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
             >
-              Submit <i class="fa-solid fa-chevron-right"></i>
+              Submit <i class="fas fa-chevron-right"></i>
             </button>
           </div>
         </form>
