@@ -1,7 +1,7 @@
 @import "./config/variables.scss";
 
 #space-container {
-  display: flex;
+  //display: flex;
   // max-height: 100vh;
 }
 
@@ -21,12 +21,15 @@
 
 #filters {
   padding: 12px;
-  background-color: black;
-  color: white;
-  min-height: 100vh;
 
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+#filters > div:first-of-type {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
 }
 
 #filters::-webkit-scrollbar {

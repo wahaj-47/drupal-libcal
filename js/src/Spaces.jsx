@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 
+import parse from "html-react-parser";
+
 import {
   Accordion,
   AccordionItem,
@@ -18,83 +20,18 @@ import useWindowDimensions from "./hooks/useWindowsDimensions";
 import { libcal, origin } from "./services";
 
 const Filters = ({ renderLocations, renderCategories }) => {
-  const { width } = useWindowDimensions();
-  const isSmallDevice = width <= 768;
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
   return (
-    <section
-      id="filters"
-      style={{
-        minWidth: collapsed ? "auto" : isSmallDevice ? "100%" : 360,
-      }}
-    >
-      <div
-        className="space-column-header"
-        style={{
-          flexDirection: collapsed ? "column" : "row",
-          position: "sticky",
-          top: 150,
-        }}
-        onClick={toggleSidebar}
-      >
-        {collapsed ? (
-          <h3>
-            <i class="fas fa-angle-double-right"></i>
-          </h3>
-        ) : null}
-        <h3
-          style={
-            collapsed
-              ? {
-                  writingMode: "vertical-rl",
-                  transform: "rotate(180deg)",
-                  marginLeft: 0,
-                  marginRight: 0,
-                }
-              : null
-          }
+    <section id="filters">
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
         >
-          Filter spaces
-        </h3>
-        {!collapsed ? (
-          <h3>
-            <i class="fas fa-angle-double-left"></i>
-          </h3>
-        ) : null}
-      </div>
-      {!collapsed ? (
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: "sticky",
-              top: 200,
-            }}
-          >
-            <Accordion allowMultipleExpanded allowZeroExpanded>
-              <AccordionItem>
-                <AccordionItemHeading>
-                  <AccordionItemButton>Locations</AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel>{renderLocations()}</AccordionItemPanel>
-              </AccordionItem>
-              <AccordionItem>
-                <AccordionItemHeading>
-                  <AccordionItemButton>Categories</AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel>{renderCategories()}</AccordionItemPanel>
-              </AccordionItem>
-            </Accordion>
-          </motion.div>
-        </AnimatePresence>
-      ) : null}
+          {/* {renderLocations()} */}
+          {renderCategories()}
+        </motion.div>
+      </AnimatePresence>
     </section>
   );
 };
@@ -111,7 +48,7 @@ const Room = ({ room, handleClick }) => {
     >
       <h3>{room.name}</h3>
       {room.image ? <img src={room.image} className="preview-img"></img> : null}
-      <p>{room.description}</p>
+      <p>{parse(room.description)}</p>
     </motion.div>
   );
 };
@@ -155,7 +92,7 @@ const RoomDetails = ({ room, goBack }) => {
       {room.image ? <img src={room.image} className="preview-img"></img> : null}
       <h3>{room.name}</h3>
       <h4>{availability ? availability : "Checking availability..."}</h4>
-      <p>{room.description}</p>
+      <p>{parse(room.description)}</p>
       <a
         className="btn btn-outline-primary"
         href={`${origin}/reserve?id=${room.id}`}
@@ -203,54 +140,68 @@ const Spaces = () => {
       categories,
     });
 
-    const roomId = categories[0].items[0].id;
+    const roomId = categories[0].items[0]?.id;
     const room = await libcal.getRoom(roomId);
 
     setSelectedRoom(room[0]);
   };
 
   const handleLocationSelection = (lid) => () => {
-    setFilters({ ...filters, locations: _.xor(filters.locations, [lid]) });
+    setFilters({ ...filters, locations: [lid] });
   };
 
   const renderLocations = () => {
-    const render = store.locations.map((location) => (
-      <div key={location.lid}>
-        <input
-          type="checkbox"
-          id={location.lid}
-          name={location.name}
-          onChange={handleLocationSelection(location.lid)}
-          checked={filters.locations.includes(location.lid)}
-        ></input>
-        <label className="label" htmlFor={location.lid}>
-          {location.name}
-        </label>
-      </div>
+    const options = store.locations.map((location) => (
+      <option value={location.lid} key={location.lid}>
+        {location.name}
+      </option>
     ));
-    return render;
+    return (
+      <select
+        name="location"
+        onChange={(e) => {
+          handleLocationSelection(e.target.value);
+        }}
+      >
+        {options}
+      </select>
+    );
   };
 
   const handleCategorySelection = (cid) => () => {
-    setFilters({ ...filters, categories: _.xor(filters.categories, [cid]) });
+    if (cid) setFilters({ ...filters, categories: [cid] });
+    else setFilters({ ...filters, categories: [] });
   };
 
   const renderCategories = () => {
     const render = store.categories.map((category) => (
       <div key={category.lid}>
         <input
-          type="checkbox"
+          type="radio"
           id={category.cid}
-          name={category.name}
+          name="category"
           onChange={handleCategorySelection(category.cid)}
-          checked={filters.categories.includes(category.cid)}
         ></input>
         <label className="label" htmlFor={category.cid}>
           {category.name}
         </label>
       </div>
     ));
-    return render;
+    return [
+      <div key="all">
+        <input
+          defaultChecked
+          type="radio"
+          id="all"
+          name="category"
+          onChange={handleCategorySelection(null)}
+        ></input>
+        <label className="label" htmlFor="all">
+          Show All
+        </label>
+      </div>,
+      ...render,
+    ];
   };
 
   const renderItems = () => {
