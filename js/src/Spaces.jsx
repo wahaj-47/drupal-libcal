@@ -37,6 +37,20 @@ const Filters = ({ renderLocations, renderCategories }) => {
 };
 
 const Room = ({ room, handleClick }) => {
+  const calculateAvailability = () => {
+    if (room.availability) {
+      const difference = moment(room.availability[0].from).diff(
+        moment(),
+        "minute"
+      );
+      if (difference < 30) return "Available now";
+      else return "Available " + moment(room.availability[0].from).fromNow();
+    }
+    return null;
+  };
+
+  const availability = useMemo(() => calculateAvailability(), [room]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -47,6 +61,7 @@ const Room = ({ room, handleClick }) => {
       onClick={handleClick}
     >
       <h3>{room.name}</h3>
+      <h4>{availability ? availability : "Checking availability..."}</h4>
       {room.image ? <img src={room.image} className="preview-img"></img> : null}
       <p>{parse(room.description)}</p>
     </motion.div>
@@ -140,6 +155,27 @@ const Spaces = () => {
       categories,
     });
 
+    const availabilitiesPromised = [];
+
+    categories.forEach((category) => {
+      const itemsPromised = [];
+      category.items.forEach((item) => {
+        itemsPromised.push(libcal.getRoom(item.id));
+      });
+      availabilitiesPromised.push(Promise.all(itemsPromised));
+    });
+
+    const availabilities = await Promise.all(availabilitiesPromised);
+
+    categories.forEach((category, index) => {
+      category.items = availabilities[index].flat();
+    });
+
+    setStore({
+      ...store,
+      categories,
+    });
+
     const roomId = categories[0].items[0]?.id;
     const room = await libcal.getRoom(roomId);
 
@@ -169,7 +205,8 @@ const Spaces = () => {
   };
 
   const handleCategorySelection = (cid) => () => {
-    if (cid) setFilters({ ...filters, categories: [cid] });
+    if (!filters.categories.includes(cid))
+      setFilters({ ...filters, categories: [cid] });
     else setFilters({ ...filters, categories: [] });
   };
 
@@ -177,31 +214,18 @@ const Spaces = () => {
     const render = store.categories.map((category) => (
       <div key={category.lid}>
         <input
-          type="radio"
+          type="checkbox"
           id={category.cid}
           name="category"
           onChange={handleCategorySelection(category.cid)}
+          checked={filters.categories.includes(category.cid)}
         ></input>
         <label className="label" htmlFor={category.cid}>
           {category.name}
         </label>
       </div>
     ));
-    return [
-      <div key="all">
-        <input
-          defaultChecked
-          type="radio"
-          id="all"
-          name="category"
-          onChange={handleCategorySelection(null)}
-        ></input>
-        <label className="label" htmlFor="all">
-          Show All
-        </label>
-      </div>,
-      ...render,
-    ];
+    return render;
   };
 
   const renderItems = () => {
