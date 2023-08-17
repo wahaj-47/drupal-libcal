@@ -2,7 +2,7 @@
 
 #space-container {
   display: flex;
-  max-height: 100vh;
+  // max-height: 100vh;
 }
 
 .space-column-header {
@@ -14,8 +14,9 @@
 
 .space-column {
   padding: 12px;
-  overflow-y: scroll;
   flex: 1;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 #filters {
@@ -47,8 +48,13 @@
 }
 
 .space-room {
+  flex: 1;
   background-color: white;
   padding: 12px;
+  margin: 6px;
+  min-width: 272px;
+  min-height: 272px;
+  border-radius: 8px;
   .preview-img {
     width: 100%;
     margin-bottom: 12px;
@@ -67,9 +73,20 @@
   -moz-box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
 }
 
-.space-room + .space-room {
-  margin-top: 12px;
+.space-room-detail {
+  width: 100%;
+  height: max-content;
 }
+
+@media screen and (max-width: 768px) {
+  .space-room {
+    width: 100%;
+  }
+}
+
+// .space-room + .space-room {
+//   margin-top: 12px;
+// }
 
 .pointer {
   cursor: pointer;

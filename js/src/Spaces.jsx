@@ -29,11 +29,17 @@ const Filters = ({ renderLocations, renderCategories }) => {
   return (
     <section
       id="filters"
-      style={{ minWidth: collapsed ? "auto" : isSmallDevice ? "100%" : 360 }}
+      style={{
+        minWidth: collapsed ? "auto" : isSmallDevice ? "100%" : 360,
+      }}
     >
       <div
         className="space-column-header"
-        style={{ flexDirection: collapsed ? "column" : "row" }}
+        style={{
+          flexDirection: collapsed ? "column" : "row",
+          position: "sticky",
+          top: 150,
+        }}
         onClick={toggleSidebar}
       >
         {collapsed ? (
@@ -67,6 +73,10 @@ const Filters = ({ renderLocations, renderCategories }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            style={{
+              position: "sticky",
+              top: 200,
+            }}
           >
             <Accordion allowMultipleExpanded allowZeroExpanded>
               <AccordionItem>
@@ -132,16 +142,16 @@ const RoomDetails = ({ room, goBack }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       key={room.id}
-      className="space-room"
+      className="space-room space-room-detail"
     >
-      {isSmallDevice ? (
-        <button
-          type="button"
-          className="btn-close ms-auto d-block my-1"
-          aria-label="Close"
-          onClick={goBack}
-        ></button>
-      ) : null}
+      {/* {isSmallDevice ? ( */}
+      <button
+        type="button"
+        className="btn-close ms-auto d-block my-1"
+        aria-label="Close"
+        onClick={goBack}
+      ></button>
+      {/* ) : null} */}
       {room.image ? <img src={room.image} className="preview-img"></img> : null}
       <h3>{room.name}</h3>
       <h4>{availability ? availability : "Checking availability..."}</h4>
@@ -243,13 +253,6 @@ const Spaces = () => {
     return render;
   };
 
-  const handleRoomSelection = (room) => async () => {
-    setSelectedRoom(room);
-    const roomData = await libcal.getRoom(room.id);
-    setSelectedRoom(roomData[0]);
-    if (isSmallDevice) setViewingDetails(true);
-  };
-
   const renderItems = () => {
     let locations = store.locations;
     let categories = store.categories;
@@ -291,8 +294,20 @@ const Spaces = () => {
     return render;
   };
 
+  const handleRoomSelection = (room) => async () => {
+    setSelectedRoom(room);
+    const roomData = await libcal.getRoom(room.id);
+    setSelectedRoom({ ...roomData[0], scrollPosition: window.scrollY });
+    // if (isSmallDevice) setViewingDetails(true);
+    setViewingDetails(true);
+    window.scrollTo(0, 500);
+  };
+
   const handleCloseButtonClicked = () => {
     setViewingDetails(false);
+    setTimeout(() => {
+      window.scrollTo(0, selectedRoom.scrollPosition);
+    }, 500);
   };
 
   return (
@@ -302,22 +317,22 @@ const Spaces = () => {
         renderCategories={renderCategories}
       ></Filters>
 
-      {isSmallDevice ? (
-        !isViewingDetails ? (
-          <section id="rooms" className="space-column">
-            <AnimatePresence>{renderItems()}</AnimatePresence>
-          </section>
-        ) : (
-          <section id="selected-room" className="space-column">
-            <AnimatePresence>
-              <RoomDetails
-                room={selectedRoom}
-                goBack={handleCloseButtonClicked}
-              ></RoomDetails>
-            </AnimatePresence>
-          </section>
-        )
+      {/* {isSmallDevice ? ( */}
+      {!isViewingDetails ? (
+        <section id="rooms" className="space-column">
+          <AnimatePresence>{renderItems()}</AnimatePresence>
+        </section>
       ) : (
+        <section id="selected-room" className="space-column">
+          <AnimatePresence>
+            <RoomDetails
+              room={selectedRoom}
+              goBack={handleCloseButtonClicked}
+            ></RoomDetails>
+          </AnimatePresence>
+        </section>
+      )}
+      {/* ) : (
         <>
           <section id="rooms" className="space-column">
             <AnimatePresence>{renderItems()}</AnimatePresence>
@@ -328,7 +343,7 @@ const Spaces = () => {
             </AnimatePresence>
           </section>{" "}
         </>
-      )}
+      )} */}
     </div>
   );
 };
