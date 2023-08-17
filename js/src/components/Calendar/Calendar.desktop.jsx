@@ -44,13 +44,13 @@ const Calendar = ({
           <i
             role="button"
             onClick={goToSlide("prev")}
-            className="fa-solid fa-chevron-left"
+            className="fas fa-chevron-left"
           ></i>
           <h1 onClick={goToSlide("today")}>{selectedDate.format("Do MMM")}</h1>
           <i
             role="button"
             onClick={goToSlide("next")}
-            className="fa-solid fa-chevron-right"
+            className="fas fa-chevron-right"
           ></i>
         </div>
       </div>

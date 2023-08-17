@@ -48,15 +48,9 @@ const ReserveSpace = () => {
   const fetchAvailibility = async () => {
     try {
       const spaceId = queryString.parse(location.search).id;
-      const response = await axios.get(
-        `http://lwt3test.lsu.edu/api/libcal/space/item/${spaceId}?availability=${moment()
-          .subtract(1, "day")
-          .format("YYYY-MM-DD")},${moment()
-          .add(70, "days")
-          .format("YYYY-MM-DD")}`
-      );
-
-      const room = { ...response.data.message[0] };
+      const data = await libcal.getAvailability(spaceId);
+      
+      const room = { ...data[0] };
       const availability = room.availability;
       setRoom({
         ...room,
@@ -181,7 +175,7 @@ const ReserveSpace = () => {
             disabled={selectedSlots.length < 1}
             className="ms-auto btn btn-outline-primary px-4"
           >
-            Next <i class="fa-solid fa-chevron-right"></i>
+            Next <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </motion.div>
@@ -205,7 +199,7 @@ const ReserveSpace = () => {
               setHasSelectedSlots(false);
             }}
           >
-            <i class="fa-solid fa-chevron-left"></i> Back
+            <i class="fas fa-chevron-left"></i> Back
           </p>
           <h4>Confirm reservation</h4>
           <div class="input-group mt-3 mb-3">
@@ -243,7 +237,7 @@ const ReserveSpace = () => {
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
             >
-              Submit <i class="fa-solid fa-chevron-right"></i>
+              Submit <i class="fas fa-chevron-right"></i>
             </button>
           </div>
         </form>
