@@ -20,11 +20,14 @@ const libcal = {
   getLocationIds: async () => {
     return await get(`${origin}/api/libcal/space/locations`);
   },
-  getLocations: async (lids) => {
+  getCategories: async (lids) => {
     return await get(`${origin}/api/libcal/space/categories/${lids}`);
   },
-  getCategories: async (cids) => {
-    return await get(`${origin}/api/libcal/space/category/${cids}?details=1`);
+  // getCategories: async (cids) => {
+  //   return await get(`${origin}/api/libcal/space/category/${cids}?details=1`);
+  // },
+  getItems: async (lids) => {
+    return await get(`${origin}/api/libcal/space/items/${lids}?availability=next&pageSize=100`)
   },
   getRoom: async (roomId) => {
     return await get(

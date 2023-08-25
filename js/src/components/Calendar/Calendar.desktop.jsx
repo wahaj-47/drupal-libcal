@@ -9,7 +9,7 @@ const Calendar = ({
   renderChild = () => {
     return null;
   },
-  onDateSelected = () => {},
+  onDateSelected = () => { },
   datesToRender,
   showDay = true,
 }) => {
@@ -32,8 +32,14 @@ const Calendar = ({
     onDateSelected(date);
   };
 
-  const updateHeader = (index) => {
-    setDate(moment(datesToRender[index * 5]));
+  const updateHeader = (slideIndex) => {
+    let nextSlide = slideIndex
+    let index = nextSlide * 5;
+    while (!moment(datesToRender[index]).isValid()) {
+      nextSlide += 1
+      index = nextSlide * 5;
+    }
+    setDate(moment(datesToRender[index]));
   };
 
   return (
@@ -73,26 +79,29 @@ const Calendar = ({
         afterChange={updateHeader}
         className="slider"
       >
-        {datesToRender.map((date) => (
-          <div
-            key={date.format("mmDDyyyy")}
-            onClick={handleDateSelection(date)}
-            className="day"
-          >
-            {showDay ? (
-              <div
-                className={`${
-                  selectedDate.isSame(date, "day") ? "selected-day" : ""
-                } ${
-                  selectedDate.isSame(date, "month") ? "selected-month" : ""
-                } day-of-month`}
-              >
-                <h1>{date.format("DD")}</h1>
-              </div>
-            ) : null}
-            {renderChild(date)}
-          </div>
-        ))}
+        {datesToRender.map((date) => {
+          if (!moment(date).isValid())
+            return <div className="day"></div>
+
+          return (
+            <div
+              key={date.format("mmDDyyyy")}
+              onClick={handleDateSelection(date)}
+              className="day"
+            >
+              {showDay ? (
+                <div
+                  className={`${selectedDate.isSame(date, "day") ? "selected-day" : ""
+                    } ${selectedDate.isSame(date, "month") ? "selected-month" : ""
+                    } day-of-month`}
+                >
+                  <h1>{date.format("DD")}</h1>
+                </div>
+              ) : null}
+              {renderChild(date)}
+            </div>
+          )
+        })}
       </Slider>
     </div>
   );

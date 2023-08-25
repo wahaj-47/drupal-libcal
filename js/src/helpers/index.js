@@ -19,18 +19,35 @@ function getWindowDimensions() {
   };
 }
 
-function generateDates(today = moment(), count = 70, flatten = false) {
-  let start = today;
-  let number = count - (count % 7);
+function generateDates(today = moment(), count = 3, flatten = false) {
+  let start = today.startOf('month');
 
-  while (start.format("dd") !== "Su") {
-    start.subtract(1, "day");
-  }
+  // let number = count - (count % 7);
+
+  // while (start.format("dd") !== "Su") {
+  //   start.subtract(1, "day");
+  // }
 
   let dates = [];
-  for (let i = 0; i < number; i += 1) {
-    dates.push(start);
-    start = moment(start).add(1, "days");
+  for (let month = 1; month <= count; month += 1) {
+
+    let padStartCount = start.day();
+
+    for (let padding = 1; padding <= padStartCount; padding += 1) {
+      dates.push(null);
+    }
+
+    let daysInMonth = start.daysInMonth();
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      dates.push(start);
+      start = moment(start).add(1, "days");
+    }
+
+    let padEndCount = 6 - moment(start).subtract(1, 'day').day();
+
+    for (let padding = 1; padding <= padEndCount; padding += 1) {
+      dates.push(null);
+    }
   }
 
   if (flatten) {

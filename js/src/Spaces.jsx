@@ -3,14 +3,6 @@ import { createRoot } from "react-dom/client";
 
 import parse from "html-react-parser";
 
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel,
-} from "react-accessible-accordion";
-
 import { motion, AnimatePresence } from "framer-motion";
 
 import _ from "lodash";
@@ -19,11 +11,13 @@ import moment from "moment";
 import useWindowDimensions from "./hooks/useWindowsDimensions";
 import { libcal, origin } from "./services";
 
+import queryString from "query-string";
+
 const Filters = ({ renderLocations, renderCategories }) => {
   return (
     <section id="filters">
       <AnimatePresence>
-        <motion.div
+        <motion.div class="selectContainer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -37,91 +31,64 @@ const Filters = ({ renderLocations, renderCategories }) => {
 };
 
 const Room = ({ room, handleClick }) => {
-  const calculateAvailability = () => {
-    if (room.availability) {
-      const difference = moment(room.availability[0].from).diff(
-        moment(),
-        "minute"
-      );
-      if (difference < 30) return "Available now";
-      else return "Available " + moment(room.availability[0].from).fromNow();
-    }
-    return null;
-  };
-
-  const availability = useMemo(() => calculateAvailability(), [room]);
-
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      key={room.id}
-      className="space-room pointer"
-      onClick={handleClick}
-    >
-      <h3>{room.name}</h3>
-      <h4>{availability ? availability : "Checking availability..."}</h4>
-      {room.image ? <img src={room.image} className="preview-img"></img> : null}
-      <p>{parse(room.description)}</p>
-    </motion.div>
-  );
-};
-
-const RoomDetails = ({ room, goBack }) => {
-  if (!room) return null;
-
-  const { width } = useWindowDimensions();
-  const isSmallDevice = width <= 768;
-
-  const calculateAvailability = () => {
-    if (room.availability) {
-      const difference = moment(room.availability[0].from).diff(
-        moment(),
-        "minute"
-      );
-      if (difference < 30) return "Available now";
-      else return "Available " + moment(room.availability[0].from).fromNow();
-    }
-    return null;
-  };
-
-  const availability = useMemo(() => calculateAvailability(), [room]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      key={room.id}
-      className="space-room space-room-detail"
-    >
-      {/* {isSmallDevice ? ( */}
-      <button
-        type="button"
-        className="btn-close ms-auto d-block my-1"
-        aria-label="Close"
-        onClick={goBack}
-      ></button>
-      {/* ) : null} */}
-      {room.image ? <img src={room.image} className="preview-img"></img> : null}
-      <h3>{room.name}</h3>
-      <h4>{availability ? availability : "Checking availability..."}</h4>
-      <p>{parse(room.description)}</p>
-      <a
-        className="btn btn-outline-primary"
-        href={`${origin}/reserve?id=${room.id}`}
-      >
-        Reserve this space
+    <div class="space-room">
+      <a href={`${origin}/spaces/booking/reserve?id=${room.id}`}>
+        <div class="roomHeader pointer">
+          <div class="roomImage">
+            {room.image ? <img src={room.image} className="preview-img"></img> : null}
+          </div>
+          <div class="roomLabel">
+            <h3>{room.name}</h3>
+            <span class="roomZone">{room.zoneName}</span>
+            {room.hasOwnProperty("availability") ? <span className={room.availability === "Available Now" ? "available" : ""}>{room.availability}</span> : <span>Checking availability...</span>}</div>
+        </div>
       </a>
-    </motion.div>
+      <div class="roomDetails">
+        <p>{parse(room.description)}</p>
+        <div class="roomFooter">
+          {/* insert room directions here */}
+        </div>
+      </div>
+    </div>
   );
 };
+
+// const RoomDetails = ({ room, goBack }) => {
+//   if (!room) return null;
+
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0 }}
+//       animate={{ opacity: 1 }}
+//       exit={{ opacity: 0 }}
+//       key={room.id}
+//       className="space-room space-room-detail"
+//     >
+//       {/* {isSmallDevice ? ( */}
+//       <button
+//         type="button"
+//         className="btn-close ms-auto d-block my-1"
+//         aria-label="Close"
+//         onClick={goBack}
+//       ></button>
+//       {/* ) : null} */}
+//       {room.image ? <img src={room.image} className="preview-img"></img> : null}
+//       <h3>{room.name}</h3>
+//       {room.hasOwnProperty("availability") ? <span className={room.availability === "Available Now" ? "available" : ""}>{room.availability}</span> : <span>Checking availability...</span>}
+//       <p>{parse(room.description)}</p>
+//       <a
+//         className="btn btn-outline-primary"
+//         href={`${origin}/reserve?id=${room.id}`}
+//       >
+//         Reserve this space
+//       </a>
+//     </motion.div>
+//   );
+// };
 
 const Spaces = () => {
-  const { width } = useWindowDimensions();
-  const isSmallDevice = width <= 768;
-  const [store, setStore] = useState({ locations: [], categories: [] });
+  const [store, setStore] = useState({ locations: [], categories: [], items: [] });
 
   const [filters, setFilters] = useState({ locations: [], categories: [] });
 
@@ -130,6 +97,11 @@ const Spaces = () => {
 
   useEffect(() => {
     fetchData();
+
+    const categoryId = queryString.parse(location.search).category;
+
+    if (categoryId)
+      setFilters({ ...filters, categories: [Number(categoryId)] })
   }, []);
 
   const fetchData = async () => {
@@ -140,46 +112,81 @@ const Spaces = () => {
     });
     lids = lids.slice(0, -1);
 
-    locations = await libcal.getLocations(lids);
-    let cids = "";
-    locations.forEach((location) => {
-      location.categories.forEach((category) => {
-        cids = cids + category.cid + ",";
-      });
-    });
-    cids = cids.slice(0, -1);
 
-    let categories = await libcal.getCategories(cids);
+    // locations = await libcal.getLocations(lids);
+    // let cids = "";
+    // locations.forEach((location) => {
+    //   location.categories.forEach((category) => {
+    //     cids = cids + category.cid + ",";
+    //   });
+    // });
+    // cids = cids.slice(0, -1);
+
+    let categoriesAtLocation = await libcal.getCategories(lids);
+    let categories = []
+    categoriesAtLocation.forEach(location => {
+      categories = categories.concat(location.categories)
+    });
+
+    let items = await libcal.getItems(lids);
+
+    items = items.map(item => {
+      if (item.availability.length > 0) {
+        const difference = moment(item.availability[0].from).diff(
+          moment(),
+          "minute"
+        );
+        return { ...item, availability: difference < 30 ? "Available Now" : "Available " + moment(item.availability[0].from).fromNow() };
+      }
+      return { ...item, availability: "Unavailable" }
+    }).sort((a, b) => {
+      const indexA = categories.findIndex(category => category.cid === a.groupId)
+      const indexB = categories.findIndex(category => category.cid === b.groupId)
+
+      return indexA - indexB;
+    })
+
     setStore({
       locations,
       categories,
+      items
     });
 
-    const availabilitiesPromised = [];
+    // const availabilitiesPromised = [];
 
-    categories.forEach((category) => {
-      const itemsPromised = [];
-      category.items.forEach((item) => {
-        itemsPromised.push(libcal.getRoom(item.id));
-      });
-      availabilitiesPromised.push(Promise.all(itemsPromised));
-    });
+    // categories.forEach((category) => {
+    //   const itemsPromised = [];
+    //   category.items.forEach((item) => {
+    //     itemsPromised.push(libcal.getRoom(item.id));
+    //   });
+    //   availabilitiesPromised.push(Promise.all(itemsPromised));
+    // });
 
-    const availabilities = await Promise.all(availabilitiesPromised);
+    // const availabilities = await Promise.all(availabilitiesPromised);
 
-    categories.forEach((category, index) => {
-      category.items = availabilities[index].flat();
-    });
+    // categories.forEach((category, index) => {
+    //   const spaces = availabilities[index].flat().map(item => {
+    //     if (item.availability) {
+    //       const difference = moment(item.availability[0].from).diff(
+    //         moment(),
+    //         "minute"
+    //       );
+    //       return { ...item, availability: difference < 30 ? "Available Now" : "Available " + moment(item.availability[0].from).fromNow() };
+    //     }
+    //     return { ...item, availability: "Unavailable" }
+    //   })
+    //   category.items = spaces
+    // });
 
-    setStore({
-      ...store,
-      categories,
-    });
+    // setStore({
+    //   ...store,
+    //   categories,
+    // });
 
-    const roomId = categories[0].items[0]?.id;
-    const room = await libcal.getRoom(roomId);
+    // const roomId = categories[0].items[0]?.id;
+    // const room = await libcal.getRoom(roomId);
 
-    setSelectedRoom(room[0]);
+    // setSelectedRoom(room[0]);
   };
 
   const handleLocationSelection = (lid) => () => {
@@ -205,42 +212,73 @@ const Spaces = () => {
   };
 
   const handleCategorySelection = (cid) => () => {
-    if (!filters.categories.includes(cid))
-      setFilters({ ...filters, categories: [cid] });
-    else setFilters({ ...filters, categories: [] });
+    // Checkbox
+    // if (filters.categories.includes(cid))
+    //   setFilters({ ...filters, categories: [] });
+    // else setFilters({ ...filters, categories: [cid] });
+
+    // Dropdown
+    if (cid)
+      setFilters({ ...filters, categories: [Number(cid)] });
+    else
+      setFilters({ ...filters, categories: [] });
   };
 
+  // Checkbox categories 
+  // const renderCategoriesAsCheckboxes = () => {
+  //   const render = store.categories.map((category) => (
+  //     <div key={category.cid}>
+  //       <input
+  //         type="checkbox"
+  //         id={category.cid}
+  //         name="category"
+  //         onChange={handleCategorySelection(category.cid)}
+  //         checked={filters.categories.includes(category.cid)}
+  //       ></input>
+  //       <label className="label" htmlFor={category.cid}>
+  //         {category.name}
+  //       </label>
+  //     </div>
+  //   ));
+  //   return render;
+  // };
+
+  // Select categories
   const renderCategories = () => {
-    const render = store.categories.map((category) => (
-      <div key={category.lid}>
-        <input
-          type="checkbox"
-          id={category.cid}
-          name="category"
-          onChange={handleCategorySelection(category.cid)}
-          checked={filters.categories.includes(category.cid)}
-        ></input>
-        <label className="label" htmlFor={category.cid}>
-          {category.name}
-        </label>
-      </div>
+    const options = store.categories.map((category) => (
+      <option
+        key={category.cid}
+        value={category.cid}
+      >
+        {category.name}
+      </option>
     ));
-    return render;
+    return (
+      <select class="roomSelect form-select form-select-lg"
+        value={filters.categories[0]}
+        onChange={e => {
+          handleCategorySelection(e.target.value)()
+        }}
+      >
+        <option value="">All room types</option>
+        {options}
+      </select>
+    )
   };
 
   const renderItems = () => {
     let locations = store.locations;
-    let categories = store.categories;
-    let items = [];
+    // let categories = store.categories;
+    let items = store.items;
 
     let cidsToFilterBy = filters.categories;
     let cidsAtLocation = [];
 
-    if (_.isEmpty(filters.locations) && _.isEmpty(filters.categories)) {
-      categories.forEach((category) => {
-        items = items.concat(category.items);
-      });
-    } else {
+    if (!_.isEmpty(filters.locations) || !_.isEmpty(filters.categories)) {
+      // categories.forEach((category) => {
+      //   items = items.concat(category.items);
+      // });
+      // } else {
       locations
         .filter((location) => filters.locations.includes(location.lid))
         .forEach((location) => {
@@ -251,11 +289,13 @@ const Spaces = () => {
 
       cidsToFilterBy = _.union(cidsToFilterBy, cidsAtLocation);
 
-      categories
-        .filter((category) => cidsToFilterBy.includes(category.cid))
-        .forEach((category) => {
-          items = items.concat(category.items);
-        });
+      items = store.items.filter(item => (cidsToFilterBy.includes(item.groupId)))
+
+      // categories
+      //   .filter((category) => cidsToFilterBy.includes(category.cid))
+      //   .forEach((category) => {
+      //     items = items.concat(category.items);
+      //   });
     }
 
     const render = items.map((item) => (
@@ -270,12 +310,13 @@ const Spaces = () => {
   };
 
   const handleRoomSelection = (room) => async () => {
-    setSelectedRoom(room);
-    const roomData = await libcal.getRoom(room.id);
-    setSelectedRoom({ ...roomData[0], scrollPosition: window.scrollY });
-    // if (isSmallDevice) setViewingDetails(true);
-    setViewingDetails(true);
-    window.scrollTo(0, 500);
+    window.location = `${origin}/reserve?id=${room.id}`
+    // setSelectedRoom({ ...room, scrollPosition: window.scrollY });
+    // //const roomData = await libcal.getRoom(room.id);
+    // //setSelectedRoom({ ...roomData[0], scrollPosition: window.scrollY });
+    // // if (isSmallDevice) setViewingDetails(true);
+    // setViewingDetails(true);
+    // window.scrollTo(0, 500);
   };
 
   const handleCloseButtonClicked = () => {

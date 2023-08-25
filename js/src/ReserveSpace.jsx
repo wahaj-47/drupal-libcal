@@ -49,7 +49,7 @@ const ReserveSpace = () => {
     try {
       const spaceId = queryString.parse(location.search).id;
       const data = await libcal.getAvailability(spaceId);
-      
+
       const room = { ...data[0] };
       const availability = room.availability;
       setRoom({
@@ -78,13 +78,13 @@ const ReserveSpace = () => {
 
     return (
       <div
-        className={`indicator ${
-          isAvailable && selectedDate.isSame(date, "day") ? "selected" : ""
-        }`}
+        className={`calDay indicator ${isAvailable && selectedDate.isSame(date, "day") ? "selected" : ""
+          }`}
       >
-        <h1 className={`${isAvailable ? "available" : ""}`}>
-          {date.format("D MMM")}
-        </h1>
+        <div className={` dayContainer ${isAvailable ? "available" : ""}`}>
+          <span class="numDay">{date.format("D")}</span>
+          <span class="monthDay">{date.format("MMM")}</span>
+        </div>
       </div>
     );
   };
@@ -136,22 +136,20 @@ const ReserveSpace = () => {
       render.push(
         <div
           key={slot.id}
-          className={`slot ${
-            selectedSlots.includes(slot.id) ? "slot-selected" : ""
-          } ${
-            !selectedSlots.includes(slot.id) && !isValidForSelection
+          className={`slot ${selectedSlots.includes(slot.id) ? "slot-selected" : ""
+            } ${!selectedSlots.includes(slot.id) && !isValidForSelection
               ? "disabled"
               : ""
-          }`}
+            }`}
           onClick={
             selectedSlots.includes(slot.id) || isValidForSelection
               ? handleSlotSelection(slot.id)
               : null
           }
         >
-          <h4>
-            {slot.from.format("hh:mma")} to {slot.to.format("hh:mma")}
-          </h4>
+          <span class="slotTime">
+            {slot.from.format("hh:mmA")} — {slot.to.format("hh:mmA")}
+          </span>
         </div>
       );
     });
@@ -164,8 +162,7 @@ const ReserveSpace = () => {
         key="slots"
         layout
       >
-        <h4>What time works best for you?</h4>
-        <p>You can select upto 4 slots</p>
+        <span class="slotPrompt">Select up to 4 slots</span>
         <div className="slot-list">{render}</div>
         <div className="d-flex mt-3">
           <button
@@ -304,7 +301,7 @@ const ReserveSpace = () => {
             onDateSelected={handleDateSelection}
             renderChild={renderIndicator}
             showDay={false}
-            datesToRender={generateDates(undefined, undefined, true)}
+            datesToRender={generateDates(undefined, 3, true)}
           ></Calendar>
         </motion.div>
       </AnimatePresence>
@@ -316,8 +313,17 @@ const ReserveSpace = () => {
           className="column blurredElement"
         >
           <div className="box">
-            <h3>{room.name}</h3>
-            <h4>Date selected: {selectedDate.format("DD MMM YYYY")}</h4>
+            <div class="roomHeader">
+              <div class="roomImage">
+                {room.image ? <img src={room.image} className="preview-img"></img> : null}
+              </div>
+              <div class="roomLabel">
+                <h3>{room.name}</h3>
+                {/* <span class="roomZone"> insert room zone here </span> */}
+                <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
+
+              </div>
+            </div>
             <AnimatePresence>
               {!hasSelectedSlots ? renderSlots() : renderForm()}
             </AnimatePresence>
@@ -341,16 +347,16 @@ const ReserveSpace = () => {
                 {isReserving == status.processing
                   ? "Just a second..."
                   : isReserving == status.successful
-                  ? "All done!"
-                  : "Uh-oh! Something went wrong"}
+                    ? "All done!"
+                    : "Uh-oh! Something went wrong"}
               </h5>
             </div>
             <div class="modal-body">
               {isReserving == status.processing
                 ? "Getting everything ready..."
                 : isReserving == status.successful
-                ? `Space reserved. An email was sent to ${formFields.email}, click the link in the email to confirm the reservation.`
-                : "Please try again"}
+                  ? `Space reserved. An email was sent to ${formFields.email}, click the link in the email to confirm the reservation.`
+                  : "Please try again"}
             </div>
             <div class="modal-footer">
               {isReserving != status.processing ? (
