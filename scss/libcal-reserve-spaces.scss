@@ -3,6 +3,7 @@
 #reserve-space {
 
   //begin new styles
+  position: relative;
   font-family: "Roboto", sans-serif;
 
   h1,
@@ -14,7 +15,72 @@
     font-family: "Roboto", sans-serif;
   }
 
+  .mapButton {
+    display: flex;
+    flex-direction: column;
+    background: #fdd023;
+    width: 40px;
+    height: 40px;
+    color: #434343;
+    text-transform: uppercase;
+    align-items: center;
+    border-radius: 4px;
+    justify-content: center;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-weight: 700;
+    font-size: 8px;
+    letter-spacing: 2px;
+    padding-top: 2px;
+    cursor: pointer;
+    padding-left: 2px;
+    i {
+      font-size: 15px;
+    }
+  }
 
+  .mapModal img {
+    width: 100%;
+  }
+  
+  .roomBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 50px;
+    box-shadow: 0px 25px 25px rgba(0,0,0,.05);
+    margin-left: -16px;
+    margin-right: -16px;
+    background: white;
+  }
+
+  .bookingBreadcrumb {
+    position: absolute;
+    z-index: 2;
+    top: -60px;
+    color: white;
+    letter-spacing: 0.125rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin-left: 10px;
+    i.fas.fa-chevron-right {
+      margin: 0px 10px;
+    }
+    a{
+      color: white;
+    }
+    a:hover{
+      color: #fdd023
+    }
+    a.current-crumb {
+      border-bottom: 2px solid #fdd023;
+    }
+  }
+  
   .slotPrompt {
     text-align: center;
     font-size: 13px;
@@ -35,17 +101,21 @@
     }
   }
 
+  .roomDetails{
+    font-size: 14px;
+  }
+
   .roomHeader {
     background: white;
     height: 160px;
     -webkit-box-shadow: 0px 25px 25px rgba(0, 0, 0, 0.05);
     box-shadow: 0px 25px 25px rgba(0, 0, 0, 0.05);
-    border-radius: 5px 5px 0px 0px;
+    border-radius: 10px 10px 0px 0px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     padding: 1.25rem;
-    margin: -16px -16px 20px -16px;
+    margin: -36px -20px 20px -20px;
 
     .roomImage {
       img {
@@ -192,7 +262,7 @@
   @media screen and (max-width: 768px) {
 
     .day {
-      height: min-content;
+      height: 12vw;
     }
 
     .column {

@@ -15,14 +15,17 @@ const Calendar = ({
 }) => {
   const [selectedDate, setDate] = useState(moment());
   const slick = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToSlide = (direction) => () => {
     switch (direction) {
       case "prev":
-        slick.current.slickPrev();
+        if (currentIndex > 0)
+          slick.current.slickPrev();
         break;
       case "next":
-        slick.current.slickNext();
+        if (currentIndex < 14)
+          slick.current.slickNext();
         break;
     }
   };
@@ -33,6 +36,9 @@ const Calendar = ({
   };
 
   const updateHeader = (slideIndex) => {
+
+    setCurrentIndex(slideIndex)
+
     let nextSlide = slideIndex
     let index = nextSlide * 5;
     while (!moment(datesToRender[index]).isValid()) {
@@ -45,14 +51,15 @@ const Calendar = ({
   return (
     <div className="box">
       <div className="calendar-header">
-        <h1>{selectedDate.format("MMMM YYYY")}</h1>
+        {/* <h1>{selectedDate.format("MMMM YYYY")}</h1> */}
+        <h1></h1>
         <div>
           <i
             role="button"
             onClick={goToSlide("prev")}
             className="fas fa-chevron-left"
           ></i>
-          <h1 onClick={goToSlide("today")}>{selectedDate.format("Do MMM")}</h1>
+          <h1 onClick={goToSlide("today")}>{selectedDate.format("MMM YYYY")}</h1>
           <i
             role="button"
             onClick={goToSlide("next")}

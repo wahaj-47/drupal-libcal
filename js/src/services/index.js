@@ -23,6 +23,9 @@ const libcal = {
   getCategories: async (lids) => {
     return await get(`${origin}/api/libcal/space/categories/${lids}`);
   },
+  getZones: async (lids) => {
+    return await get(`${origin}/api/libcal/space/zones/${lids}`);
+  },
   // getCategories: async (cids) => {
   //   return await get(`${origin}/api/libcal/space/category/${cids}?details=1`);
   // },

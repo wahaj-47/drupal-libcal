@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
+import parse from "html-react-parser";
+
 import queryString from "query-string";
 
 import Calendar from "./components/Calendar/Calendar.desktop";
@@ -12,6 +14,7 @@ import moment from "moment";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { libcal } from "./services";
+import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
 
 const status = Object.freeze({
   processing: Symbol("processing"),
@@ -286,94 +289,124 @@ const ReserveSpace = () => {
     }
   };
 
+  const generatecrumbs = () => {
+    const title = "Study Spaces";
+    const root = window.location.origin + "/spaces"
+
+    const category = queryString.parse(location.search).category
+    const categoryLink = window.location.origin + "/spaces/booking" + "?category=" + queryString.parse(location.search).categoryId
+
+    const roomName = room?.name.split(" ").slice(-1)[0];
+    const href = window.location.href
+
+    return [
+      { label: title, link: root },
+      { label: category, link: categoryLink },
+      { label: roomName, link: href }
+    ]
+  }
+
   if (!room) return null;
 
   return (
-    <div className="d-flex flex-wrap">
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="column blurredElement"
-        >
-          <Calendar
-            onDateSelected={handleDateSelection}
-            renderChild={renderIndicator}
-            showDay={false}
-            datesToRender={generateDates(undefined, 3, true)}
-          ></Calendar>
-        </motion.div>
-      </AnimatePresence>
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="column blurredElement"
-        >
-          <div className="box">
-            <div class="roomHeader">
-              <div class="roomImage">
-                {room.image ? <img src={room.image} className="preview-img"></img> : null}
-              </div>
-              <div class="roomLabel">
-                <h3>{room.name}</h3>
-                {/* <span class="roomZone"> insert room zone here </span> */}
-                <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
+    <>
+      <div class="bookingBreadcrumb"><Breadcrumb crumbs={generatecrumbs()}></Breadcrumb></div>
 
+      <div className="d-flex flex-wrap">
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="column blurredElement"
+          >
+            <Calendar
+              onDateSelected={handleDateSelection}
+              renderChild={renderIndicator}
+              showDay={false}
+              datesToRender={generateDates(undefined, 3, true)}
+            ></Calendar>
+          </motion.div>
+        </AnimatePresence>
+        <div class="column blurredElement">
+        {/* <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="column blurredElement"
+          > */}  
+            <div className="box">
+              <div class="roomBox">
+                <div class="roomHeader">
+                  <div class="roomImage">
+                    {room.image ? <img src={room.image} className="preview-img"></img> : null}
+                  </div>
+                  <div class="roomLabel">
+                    <h3>{room.name}</h3>
+                    {/* <span class="roomZone"> insert room zone here </span> */}
+                    <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
+                  </div>
+                </div>
+                <div class="roomDetails">
+                  <p>{parse(room.description)}</p>
+                  <div class="roomFooter">
+                    {/* insert room directions here */}
+                  </div>
+                </div>
               </div>
+              <AnimatePresence>
+                {!hasSelectedSlots ? renderSlots() : renderForm()}
+              </AnimatePresence>
             </div>
-            <AnimatePresence>
-              {!hasSelectedSlots ? renderSlots() : renderForm()}
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          {/* </motion.div>
+        </AnimatePresence> */}
+        </div>
 
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">
+        <div
+          class="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">
+                  {isReserving == status.processing
+                    ? "Just a second..."
+                    : isReserving == status.successful
+                      ? "All done!"
+                      : "Uh-oh! Something went wrong"}
+                </h5>
+              </div>
+              <div class="modal-body">
                 {isReserving == status.processing
-                  ? "Just a second..."
+                  ? "Getting everything ready..."
                   : isReserving == status.successful
-                    ? "All done!"
-                    : "Uh-oh! Something went wrong"}
-              </h5>
-            </div>
-            <div class="modal-body">
-              {isReserving == status.processing
-                ? "Getting everything ready..."
-                : isReserving == status.successful
-                  ? `Space reserved. An email was sent to ${formFields.email}, click the link in the email to confirm the reservation.`
-                  : "Please try again"}
-            </div>
-            <div class="modal-footer">
-              {isReserving != status.processing ? (
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                  onClick={resetState}
-                >
-                  OK
-                </button>
-              ) : null}
+                    ? `Space reserved. An email was sent to ${formFields.email}, click the link in the email to confirm the reservation.`
+                    : "Please try again"}
+              </div>
+              <div class="modal-footer">
+                {isReserving != status.processing ? (
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    onClick={resetState}
+                  >
+                    OK
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

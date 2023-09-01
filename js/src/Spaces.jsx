@@ -12,8 +12,9 @@ import useWindowDimensions from "./hooks/useWindowsDimensions";
 import { libcal, origin } from "./services";
 
 import queryString from "query-string";
+import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
 
-const Filters = ({ renderLocations, renderCategories }) => {
+const Filters = ({ filters }) => {
   return (
     <section id="filters">
       <AnimatePresence>
@@ -22,8 +23,7 @@ const Filters = ({ renderLocations, renderCategories }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* {renderLocations()} */}
-          {renderCategories()}
+          {filters.map(filter => filter())}
         </motion.div>
       </AnimatePresence>
     </section>
@@ -32,8 +32,14 @@ const Filters = ({ renderLocations, renderCategories }) => {
 
 const Room = ({ room, handleClick }) => {
   return (
-    <div class="space-room">
-      <a href={`${origin}/spaces/booking/reserve?id=${room.id}`}>
+    <div
+      key={room.id}
+      class="space-room">
+      <motion.a
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        href={`${origin}/spaces/booking/reserve?id=${room.id}&category=${room.groupName}&categoryId=${room.groupId}`}>
         <div class="roomHeader pointer">
           <div class="roomImage">
             {room.image ? <img src={room.image} className="preview-img"></img> : null}
@@ -43,7 +49,7 @@ const Room = ({ room, handleClick }) => {
             <span class="roomZone">{room.zoneName}</span>
             {room.hasOwnProperty("availability") ? <span className={room.availability === "Available Now" ? "available" : ""}>{room.availability}</span> : <span>Checking availability...</span>}</div>
         </div>
-      </a>
+      </motion.a>
       <div class="roomDetails">
         <p>{parse(room.description)}</p>
         <div class="roomFooter">
@@ -88,9 +94,9 @@ const Room = ({ room, handleClick }) => {
 // };
 
 const Spaces = () => {
-  const [store, setStore] = useState({ locations: [], categories: [], items: [] });
+  const [store, setStore] = useState({ locations: [], categories: [{ cid: "", name: "All room types" }], zones: [{ id: "", name: "All zones" }], items: [], });
 
-  const [filters, setFilters] = useState({ locations: [], categories: [] });
+  const [filters, setFilters] = useState({ locations: [], categories: [""], zones: [""], availability: [""] });
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isViewingDetails, setViewingDetails] = useState(false);
@@ -106,13 +112,18 @@ const Spaces = () => {
 
   const fetchData = async () => {
     let locations = await libcal.getLocationIds();
+    let zonesPromised = []
+
     let lids = "";
+
     locations.forEach((location) => {
       lids = lids + location.lid + ",";
+      zonesPromised.push(libcal.getZones(location.lid));
     });
+
     lids = lids.slice(0, -1);
 
-
+    let zones = [{ id: "", name: "All zones" }].concat((await Promise.all(zonesPromised)).flat());
     // locations = await libcal.getLocations(lids);
     // let cids = "";
     // locations.forEach((location) => {
@@ -123,7 +134,7 @@ const Spaces = () => {
     // cids = cids.slice(0, -1);
 
     let categoriesAtLocation = await libcal.getCategories(lids);
-    let categories = []
+    let categories = [{ cid: "", name: "All room types" }]
     categoriesAtLocation.forEach(location => {
       categories = categories.concat(location.categories)
     });
@@ -149,6 +160,7 @@ const Spaces = () => {
     setStore({
       locations,
       categories,
+      zones,
       items
     });
 
@@ -221,7 +233,7 @@ const Spaces = () => {
     if (cid)
       setFilters({ ...filters, categories: [Number(cid)] });
     else
-      setFilters({ ...filters, categories: [] });
+      setFilters({ ...filters, categories: [""] });
   };
 
   // Checkbox categories 
@@ -244,7 +256,7 @@ const Spaces = () => {
   // };
 
   // Select categories
-  const renderCategories = () => {
+  const filterByCategories = () => {
     const options = store.categories.map((category) => (
       <option
         key={category.cid}
@@ -260,11 +272,74 @@ const Spaces = () => {
           handleCategorySelection(e.target.value)()
         }}
       >
-        <option value="">All room types</option>
+        {/* <option value="">All room types</option> */}
         {options}
       </select>
     )
   };
+
+  const handleZoneSelection = (id) => () => {
+    // Checkbox
+    // if (filters.categories.includes(cid))
+    //   setFilters({ ...filters, categories: [] });
+    // else setFilters({ ...filters, categories: [cid] });
+
+    // Dropdown
+    if (id)
+      setFilters({ ...filters, zones: [Number(id)] });
+    else
+      setFilters({ ...filters, zones: [""] });
+  };
+
+  const filterByZones = () => {
+    const options = store.zones.map((zone) => (
+      <option
+        key={zone.id}
+        value={zone.id}
+      >
+        {zone.name}
+      </option>
+    ));
+    return (
+      <select class="roomSelect form-select form-select-lg"
+        value={filters.zones[0]}
+        onChange={e => {
+          handleZoneSelection(e.target.value)()
+        }}
+      >
+        {/* <option value="">All room types</option> */}
+        {options}
+      </select>
+    )
+  };
+
+  const handleAvailibilitySelection = (value) => () => {
+    // Checkbox
+    // if (filters.categories.includes(cid))
+    //   setFilters({ ...filters, categories: [] });
+    // else setFilters({ ...filters, categories: [cid] });
+
+    // Dropdown
+    if (value)
+      setFilters({ ...filters, availability: [value] });
+    else
+      setFilters({ ...filters, availability: [""] });
+  };
+
+  const filterByAvailability = () => {
+    return (
+      <select class="roomSelect form-select form-select-lg"
+        value={filters.availability[0]}
+        onChange={e => {
+          handleAvailibilitySelection(e.target.value)()
+        }}
+      >
+        <option value="">Availability: Any</option>
+        <option value="now">Available Now</option>
+        <option value="soon">Available Soon</option>
+      </select>
+    )
+  }
 
   const renderItems = () => {
     let locations = store.locations;
@@ -274,7 +349,7 @@ const Spaces = () => {
     let cidsToFilterBy = filters.categories;
     let cidsAtLocation = [];
 
-    if (!_.isEmpty(filters.locations) || !_.isEmpty(filters.categories)) {
+    if (!_.isEmpty(filters.locations.filter(lid => lid)) || !_.isEmpty(filters.categories.filter(cid => cid))) {
       // categories.forEach((category) => {
       //   items = items.concat(category.items);
       // });
@@ -288,7 +363,6 @@ const Spaces = () => {
         });
 
       cidsToFilterBy = _.union(cidsToFilterBy, cidsAtLocation);
-
       items = store.items.filter(item => (cidsToFilterBy.includes(item.groupId)))
 
       // categories
@@ -296,6 +370,17 @@ const Spaces = () => {
       //   .forEach((category) => {
       //     items = items.concat(category.items);
       //   });
+    }
+
+    if (!_.isEmpty(filters.zones.filter(id => id)))
+      items = items.filter(item => filters.zones.filter(id => id).includes(item.zoneId))
+
+    if (!_.isEmpty(filters.availability.filter(availability => availability))) {
+      if (filters.availability[0] === "now")
+        items = items.filter(item => item.availability === "Available Now")
+      else
+        items = items.filter(item => item.availability !== "Available Now" && item.availability !== "Unavailable")
+
     }
 
     const render = items.map((item) => (
@@ -326,11 +411,24 @@ const Spaces = () => {
     }, 500);
   };
 
+  const generatecrumbs = () => {
+    const title = "Study Spaces";
+    const root = window.location.origin + "/spaces"
+
+    const category = store.categories.find(category => category.cid === filters.categories[0])?.name
+    const href = window.location.origin + window.location.pathname + "?category=" + filters.categories[0]
+
+    return [
+      { label: title, link: root },
+      { label: category, link: href }
+    ]
+  }
+
   return (
     <div id="space-container">
+      <div class="bookingBreadcrumb"><Breadcrumb crumbs={generatecrumbs()}></Breadcrumb></div>
       <Filters
-        renderLocations={renderLocations}
-        renderCategories={renderCategories}
+        filters={[filterByCategories, filterByZones, filterByAvailability]}
       ></Filters>
 
       {/* {isSmallDevice ? ( */}

@@ -10,51 +10,39 @@
   }
 }
 
-// #filters {
-//   padding: 12px;
-//   position: absolute;
-//   z-index: 2;
-//   width: 100%;
-//   top: -80px;
-//   > div{
-//     opacity: 1;
-//     display: flex;
-//     justify-content: center;
-//     border-bottom: 2px solid #fdd023;
-//     width: fit-content;
-//     margin: 0 auto;
-//   }
-//   .roomSelect{
-//     letter-spacing: 0.125rem;
-//     font-weight: 500;
-//     font-size: 0.875rem;
-//     text-transform: uppercase;
-//     background: transparent;
-//     color: white;
-//     border: 0px;
-//     z-index: 99999999;
-//     border-radius: 0px;
-//     padding-left: 0px;
-//     padding-bottom: 0px;
-//     width: auto;
-//     padding-right: 36px;
-//     option {
-//       text-transform: initial;
-//       background: #4b2758;
-//       font-size: 14px;
-//     }
-//   }
-  
-// }
+.bookingBreadcrumb {
+  position: absolute;
+  z-index: 2;
+  top: -60px;
+  color: white;
+  letter-spacing: 0.125rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  margin-left: 10px;
+  i.fas.fa-chevron-right {
+    margin: 0px 10px;
+  }
+  a{
+    color: white;
+  }
+  a:hover{
+    color: #fdd023
+  }
+  a.current-crumb {
+    border-bottom: 2px solid #fdd023;
+  }
+}
+
 
 
 .mapButton {
   display: flex;
   flex-direction: column;
-  background: #dfdfdf;
+  background: #fdd023;
   width: 40px;
   height: 40px;
-  color: #3c1053;
+  color: #434343;
   text-transform: uppercase;
   align-items: center;
   border-radius: 4px;
@@ -73,7 +61,7 @@
   }
 }
 
-section#rooms {
+section#rooms, .selectContainer {
   max-width: 1670px;
   margin: 0 auto;
   display: grid;
@@ -145,6 +133,7 @@ section#rooms {
   font-size: 12px;
   padding: 20px;
   position: relative;
+  height: 100%;
 }
 
 // end new styles
@@ -206,6 +195,13 @@ section#rooms {
   min-width: 272px;
   min-height: 272px;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+
+  .roomDetails a{
+      font-weight: 700;
+      color: #3c1053;
+  }
   .preview-img {
     width: 100%;
     margin-bottom: 12px;
@@ -215,9 +211,6 @@ section#rooms {
   h4 {
     color: $accent-light;
     font-size: large;
-  }
-  p {
-    text-transform: capitalize;
   }
   box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 10px 20px -6px rgba(0, 0, 0, 0.3);
@@ -303,13 +296,13 @@ section#rooms {
 
 
 @media (max-width:1200px){
-  section#rooms{
+  section#rooms, .selectContainer{
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width:767px){
-    section#rooms{
+    section#rooms, .selectContainer{
       grid-template-columns: 1fr;
     }
 }
