@@ -266,7 +266,7 @@ const Spaces = () => {
       </option>
     ));
     return (
-      <select class="roomSelect form-select form-select-lg"
+      <select class="roomSelect form-select"
         value={filters.categories[0]}
         onChange={e => {
           handleCategorySelection(e.target.value)()
@@ -301,7 +301,7 @@ const Spaces = () => {
       </option>
     ));
     return (
-      <select class="roomSelect form-select form-select-lg"
+      <select class="roomSelect form-select"
         value={filters.zones[0]}
         onChange={e => {
           handleZoneSelection(e.target.value)()
@@ -328,7 +328,7 @@ const Spaces = () => {
 
   const filterByAvailability = () => {
     return (
-      <select class="roomSelect form-select form-select-lg"
+      <select class="roomSelect form-select"
         value={filters.availability[0]}
         onChange={e => {
           handleAvailibilitySelection(e.target.value)()

@@ -17,15 +17,14 @@ const Event = ({ event, date }) => {
   });
 
   return (
-    <Fragment key={event.id + date.format("mmddyyyy")}>
+    <Fragment key={event.id + date?.format("mmddyyyy")}>
       <div
         ref={setTriggerRef}
         style={{
           backgroundColor: `${event.color}`,
         }}
-        className={`event  ${
-          date.isSame(event.start, "day") ? "event-start" : undefined
-        } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
+        className={`event  ${date.isSame(event.start, "day") ? "event-start" : undefined
+          } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
       >
         {date.isSame(event.start, "day") ? <p>{event.title}</p> : null}
       </div>

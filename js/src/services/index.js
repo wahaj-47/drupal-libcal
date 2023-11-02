@@ -43,10 +43,11 @@ const libcal = {
     );
   },
   getAvailability: async (spaceId) => {
+    // return await get(`${origin}/api/libcal/space/item/${spaceId}?availability=next`)
     return await get(`${origin}/api/libcal/space/item/${spaceId}?availability=${moment()
-      .subtract(1, "day")
+      // .subtract(1, "day")
       .format("YYYY-MM-DD")},${moment()
-        .add(70, "days")
+        .add(31, "days")
         .format("YYYY-MM-DD")}`)
   },
   reserve: async (payload) => {

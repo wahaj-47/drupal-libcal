@@ -54,14 +54,15 @@ const ReserveSpace = () => {
       const data = await libcal.getAvailability(spaceId);
 
       const room = { ...data[0] };
+      console.log(data);
       const availability = room.availability;
       setRoom({
         ...room,
-        availability: availability.map((slot) => ({
+        availability: availability ? availability.map((slot) => ({
           id: slot.from,
           from: moment(slot.from),
           to: moment(slot.to),
-        })),
+        })).filter(slot => moment().isSameOrBefore(slot.from)) : [],
       });
     } catch (error) {
       console.log(error);
@@ -261,13 +262,18 @@ const ReserveSpace = () => {
     const slots = room.availability.filter((slot) =>
       selectedSlots.includes(slot.id)
     );
+
     const payload = {
       ...formFields,
       start: selectedSlots[0],
-      bookings: slots.map((slot) => ({
+      // bookings: slots.map((slot) => ({
+      //   id: room.id,
+      //   to: slot.to.format(),
+      // })),
+      bookings: [{
         id: room.id,
-        to: slot.to.format(),
-      })),
+        to: selectedSlots[selectedSlots.length - 1]
+      }],
       test: 0,
     };
 
@@ -275,6 +281,8 @@ const ReserveSpace = () => {
       setIsReserving(status.processing);
 
       const response = await libcal.reserve(payload);
+
+      console.log(payload)
 
       if (response.data.message.hasOwnProperty("booking_id")) {
         setIsReserving(status.successful);
@@ -329,36 +337,36 @@ const ReserveSpace = () => {
           </motion.div>
         </AnimatePresence>
         <div class="column blurredElement">
-        {/* <AnimatePresence>
+          {/* <AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="column blurredElement"
-          > */}  
-            <div className="box">
-              <div class="roomBox">
-                <div class="roomHeader">
-                  <div class="roomImage">
-                    {room.image ? <img src={room.image} className="preview-img"></img> : null}
-                  </div>
-                  <div class="roomLabel">
-                    <h3>{room.name}</h3>
-                    {/* <span class="roomZone"> insert room zone here </span> */}
-                    <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
-                  </div>
+          > */}
+          <div className="box">
+            <div class="roomBox">
+              <div class="roomHeader">
+                <div class="roomImage">
+                  {room.image ? <img src={room.image} className="preview-img"></img> : null}
                 </div>
-                <div class="roomDetails">
-                  <p>{parse(room.description)}</p>
-                  <div class="roomFooter">
-                    {/* insert room directions here */}
-                  </div>
+                <div class="roomLabel">
+                  <h3>{room.name}</h3>
+                  {/* <span class="roomZone"> insert room zone here </span> */}
+                  <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
                 </div>
               </div>
-              <AnimatePresence>
-                {!hasSelectedSlots ? renderSlots() : renderForm()}
-              </AnimatePresence>
+              <div class="roomDetails">
+                <p>{parse(room.description)}</p>
+                <div class="roomFooter">
+                  {/* insert room directions here */}
+                </div>
+              </div>
             </div>
+            <AnimatePresence>
+              {!hasSelectedSlots ? renderSlots() : renderForm()}
+            </AnimatePresence>
+          </div>
           {/* </motion.div>
         </AnimatePresence> */}
         </div>

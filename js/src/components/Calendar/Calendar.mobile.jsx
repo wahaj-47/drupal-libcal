@@ -1,11 +1,27 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import Slider from "react-slick";
 import moment from "moment";
 
 const Calendar = ({ renderDots, renderChild, datesToRender }) => {
+  const [datesInState, setDatesInState] = useState([])
   const [selectedDate, setDate] = useState(moment());
   const slick = useRef(null);
+
+  useEffect(() => {
+    if (datesToRender) {
+      const datesWithoutPadding = datesToRender.filter(date => date)
+      setDatesInState(datesWithoutPadding)
+    }
+  }, [datesToRender])
+
+  useEffect(() => {
+    if (datesInState) {
+      const todaysIndex = datesInState.findIndex(date => moment().isSame(moment(date), 'date'))
+      if (todaysIndex != -1)
+        slick.current.slickGoTo(todaysIndex);
+    }
+  }, [datesInState])
 
   const goToSlide = (direction) => () => {
     switch (direction) {
@@ -27,7 +43,7 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
   };
 
   const updateHeader = (index) => {
-    setDate(moment(datesToRender[index]));
+    setDate(moment(datesInState[index]));
   };
 
   return (
@@ -56,23 +72,26 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
         arrows={false}
         afterChange={updateHeader}
       >
-        {datesToRender.map((date) => (
-          <div
-            key={date.format("mmDDyyyy")}
-            onClick={handleDateSelection(date)}
-            className="day-mobile"
-          >
-            <h1>{date.format("dd")}</h1>
-            <h1
-              className={
-                selectedDate.isSame(date, "day") ? "selected-day" : undefined
-              }
-            >
-              {date.format("DD")}
-              <div className="event-dots">{renderDots(date)}</div>
-            </h1>
-          </div>
-        ))}
+        {datesInState.map((date) => {
+          if (moment(date).isValid())
+            return (
+              <div
+                key={date.format("mmDDyyyy")}
+                onClick={handleDateSelection(date)}
+                className="day-mobile"
+              >
+                <h1>{date.format("dd")}</h1>
+                <h1
+                  className={
+                    selectedDate.isSame(date, "day") ? "selected-day" : undefined
+                  }
+                >
+                  {date.format("DD")}
+                  <div className="event-dots">{renderDots(date)}</div>
+                </h1>
+              </div>
+            )
+        })}
       </Slider>
       <div id="list-header">
         <h2>{selectedDate.format("dddd, MMMM D")}</h2>

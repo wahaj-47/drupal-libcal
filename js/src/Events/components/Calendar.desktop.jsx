@@ -50,11 +50,16 @@ const EventsList = ({ collapsed }) => {
     interactive: true,
   });
 
+  const [color, setColor] = useState(color);
+
+  useEffect(() => { setColor(getRandomColor()) }, [])
+
   return (
     <Fragment>
       <div
         ref={setTriggerRef}
         className={`event event-collapse event-start event-end`}
+        style={{ backgroundColor: color }}
       >
         {collapsed.length} more
       </div>
@@ -111,9 +116,8 @@ const Calendar = ({ events, datesToRender }) => {
             style={{
               backgroundColor: `transparent`,
             }}
-            className={`event ${
-              date.isSame(event.start, "day") ? "event-start" : undefined
-            } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
+            className={`event ${date.isSame(event.start, "day") ? "event-start" : undefined
+              } ${date.isSame(event.end, "day") ? "event-end" : undefined}`}
           ></div>
         );
 
