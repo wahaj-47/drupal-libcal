@@ -32,6 +32,7 @@ const ReserveSpace = () => {
     lname: "",
     email: "",
   });
+  const [errorMsg, setErrorMsg] = useState("")
   const [isReserving, setIsReserving] = useState(status.processing);
 
   const resetState = () => {
@@ -237,6 +238,7 @@ const ReserveSpace = () => {
               type="submit"
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
+              disabled={!isFormFilled()}
             >
               Submit <i class="fas fa-chevron-right"></i>
             </button>
@@ -256,6 +258,12 @@ const ReserveSpace = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!isFormValid()) {
+      setErrorMsg("Please use your LSU email.")
+      setIsReserving(status.failed);
+      return
+    }
     // Reserve a space
     // API Authentication: Requires write access
     // The LibCal Resource plugin currently does not handle POST requests
@@ -272,7 +280,7 @@ const ReserveSpace = () => {
       // })),
       bookings: [{
         id: room.id,
-        to: selectedSlots[selectedSlots.length - 1]
+        to: slots[selectedSlots.length - 1].to.format()
       }],
       test: 0,
     };
@@ -282,8 +290,6 @@ const ReserveSpace = () => {
 
       const response = await libcal.reserve(payload);
 
-      console.log(payload)
-
       if (response.data.message.hasOwnProperty("booking_id")) {
         setIsReserving(status.successful);
       } else {
@@ -292,10 +298,16 @@ const ReserveSpace = () => {
 
       fetchAvailibility();
     } catch (error) {
-      console.log(error);
+      const message = error.response.data.message;
+      setErrorMsg(message)
       setIsReserving(status.failed);
     }
   };
+
+  const isFormValid = () => {
+    const regex = new RegExp("[a-z0-9\.-_]*@lsu\.edu$", "i");
+    return regex.test(formFields.email)
+  }
 
   const generatecrumbs = () => {
     const title = "Study Spaces";
@@ -312,6 +324,10 @@ const ReserveSpace = () => {
       { label: category, link: categoryLink },
       { label: roomName, link: href }
     ]
+  }
+
+  const isFormFilled = () => {
+    return Boolean(formFields.fname && formFields.lname && formFields.email)
   }
 
   if (!room) return null;
@@ -396,7 +412,7 @@ const ReserveSpace = () => {
                   ? "Getting everything ready..."
                   : isReserving == status.successful
                     ? `Space reserved. An email was sent to ${formFields.email}, click the link in the email to confirm the reservation.`
-                    : "Please try again"}
+                    : errorMsg}
               </div>
               <div class="modal-footer">
                 {isReserving != status.processing ? (

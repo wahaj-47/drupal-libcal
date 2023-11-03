@@ -127,8 +127,14 @@ class LibCal extends ResourceBase {
         ),
       );
 
-      $res = ['message' => json_decode($e->getResponse()->getBody(), true)];
-      return (new ModifiedResourceResponse($res));
+      $error = $e->getResponse();
+
+      if($error){
+        $error_message = ['message' => json_decode($error->getBody(), true)];
+        $status_code = $error->getStatusCode();
+      }
+
+      return (new ModifiedResourceResponse($error_message, $status_code));
     }
   }
 
@@ -165,8 +171,28 @@ class LibCal extends ResourceBase {
         ),
       );
 
-      $res = ['message' => json_decode($e->getResponse()->getBody(), true)];
-      return (new ModifiedResourceResponse($res));
+      $error = $e->getResponse();
+
+      if($error){
+        // Get the response body as a string
+        $response_body = (string) $error->getBody();
+
+        // Attempt to decode the response body as JSON
+        $decoded_response = json_decode($response_body, true);
+
+        if ($decoded_response !== null) {
+          // If the response body is valid JSON, extract the error message
+          $error_message = ['message' => $decoded_response['error_message']]; // Adjust the key based on your API's response structure
+        } else {
+          // If the response body is not valid JSON, use it as the error message
+          $error_message = ['message' => $response_body];
+        }
+
+        $status_code = $error->getStatusCode();
+        return (new ModifiedResourceResponse($error_message, $status_code));
+      }
+
+      return (new ModifiedResourceResponse(['message' => 'Unknown error'], 500));
     }
   }
 

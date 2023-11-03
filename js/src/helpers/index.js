@@ -66,7 +66,7 @@ async function get(url) {
       return response.data.message;
     return response.data
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
@@ -75,7 +75,7 @@ async function post(url, payload, config) {
     const response = await axios.post(url, payload, config);
     return response
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
