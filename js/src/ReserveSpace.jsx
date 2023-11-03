@@ -9,7 +9,6 @@ import Calendar from "./components/Calendar/Calendar.desktop";
 
 import { generateDates } from "./helpers";
 
-import axios from "axios";
 import moment from "moment";
 
 import { motion, AnimatePresence } from "framer-motion";
