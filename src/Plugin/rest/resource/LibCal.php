@@ -112,20 +112,10 @@ class LibCal extends ResourceBase {
           break;
       }
 
-      $build = array(
-        '#cache' => array(
-          'max-age' => 0,
-        ),
-      );
-      
       $res = ['message' => json_decode((string)$response->getBody(), true)];
-      return (new ModifiedResourceResponse($res));
+      return (new ModifiedResourceResponse($res))->setMaxAge(0);
+
     } catch (RequestException $e) {
-      $build = array(
-        '#cache' => array(
-          'max-age' => 0,
-        ),
-      );
 
       $error = $e->getResponse();
 
@@ -134,7 +124,7 @@ class LibCal extends ResourceBase {
         $status_code = $error->getStatusCode();
       }
 
-      return (new ModifiedResourceResponse($error_message, $status_code));
+      return (new ModifiedResourceResponse($error_message, $status_code))->setMaxAge(0);
     }
   }
 
@@ -155,21 +145,10 @@ class LibCal extends ResourceBase {
           'json' => $data
       ]);
 
-      $build = array(
-        '#cache' => array(
-          'max-age' => 0,
-        ),
-      );
-      
       $res = ['message' => json_decode((string)$response->getBody(), true)];
-      return (new ModifiedResourceResponse($res));
-    } catch (RequestException $e) {
+      return (new ModifiedResourceResponse($res))->setMaxAge(0);
 
-      $build = array(
-        '#cache' => array(
-          'max-age' => 0,
-        ),
-      );
+    } catch (RequestException $e) {
 
       $error = $e->getResponse();
 
@@ -189,10 +168,10 @@ class LibCal extends ResourceBase {
         }
 
         $status_code = $error->getStatusCode();
-        return (new ModifiedResourceResponse($error_message, $status_code));
+        return (new ModifiedResourceResponse($error_message, $status_code))->setMaxAge(0);
       }
 
-      return (new ModifiedResourceResponse(['message' => 'Unknown error'], 500));
+      return (new ModifiedResourceResponse(['message' => 'Unknown error'], 500))->setMaxAge(0);
     }
   }
 

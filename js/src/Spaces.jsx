@@ -142,14 +142,16 @@ const Spaces = () => {
     let items = await libcal.getItems(lids);
 
     items = items.map(item => {
-      if (item.availability.length > 0) {
-        const difference = moment(item.availability[0].from).diff(
-          moment(),
-          "minute"
-        );
-        return { ...item, availability: difference < 30 ? "Available Now" : "Available " + moment(item.availability[0].from).fromNow() };
-      }
-      return { ...item, availability: "Unavailable" }
+
+      if (item.availability.length < 1)
+        return { ...item, availability: "Unavailable" }
+
+      const difference = moment(item.availability[0].from).diff(
+        moment(),
+        "minute"
+      );
+
+      return { ...item, availability: difference < 30 ? "Available Now" : "Available " + moment(item.availability[0].from).fromNow() };
     }).sort((a, b) => {
       const indexA = categories.findIndex(category => category.cid === a.groupId)
       const indexB = categories.findIndex(category => category.cid === b.groupId)

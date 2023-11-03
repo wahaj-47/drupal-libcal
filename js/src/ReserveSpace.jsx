@@ -55,7 +55,6 @@ const ReserveSpace = () => {
       const data = await libcal.getAvailability(spaceId);
 
       const room = { ...data[0] };
-      console.log(data);
       const availability = room.availability;
       setRoom({
         ...room,
@@ -63,7 +62,7 @@ const ReserveSpace = () => {
           id: slot.from,
           from: moment(slot.from),
           to: moment(slot.to),
-        })).filter(slot => moment().isSameOrBefore(slot.from)) : [],
+        })) : [],
       });
     } catch (error) {
       console.log(error);
