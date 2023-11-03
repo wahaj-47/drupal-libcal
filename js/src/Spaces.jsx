@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import _ from "lodash";
 import moment from "moment";
 
-import useWindowDimensions from "./hooks/useWindowsDimensions";
 import { libcal, origin } from "./services";
 
 import queryString from "query-string";
