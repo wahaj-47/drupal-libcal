@@ -39,6 +39,22 @@ const libcal = {
       throw error
     }
   },
+  getHours: async (lids) => {
+    try {
+      return await get(`${origin}/api/libcal/hours/${lids}?to=${moment()
+        .add(31, "days")
+        .format("YYYY-MM-DD")}`);
+    } catch (error) {
+      throw error
+    }
+  },
+  getConvertedLocationIDs: async (lids) => {
+    try {
+      return await get(`${origin}/api/libcal/convert?lids=${lids}`);
+    } catch (error) {
+      throw error
+    }
+  },
   getZones: async (lids) => {
     try {
       return await get(`${origin}/api/libcal/space/zones/${lids}`);

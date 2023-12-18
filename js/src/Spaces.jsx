@@ -38,7 +38,7 @@ const Room = ({ room, handleClick }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        href={`${origin}/spaces/booking/reserve?id=${room.id}&category=${room.groupName}&categoryId=${room.groupId}`}>
+        href={`${origin}/spaces/booking/reserve?id=${room.id}&category=${room.groupName}&categoryId=${room.groupId}&buildingId=${room.convertedLid}`}>
         <div class="roomHeader pointer">
           <div class="roomImage">
             {room.image ? <img src={room.image} className="preview-img"></img> : null}
@@ -121,8 +121,11 @@ const Spaces = () => {
     });
 
     lids = lids.slice(0, -1);
+    let convertedLids = await libcal.getConvertedLocationIDs(lids)
+    convertedLids = convertedLids.split(",")
 
     let zones = [{ id: "", name: "All zones" }].concat((await Promise.all(zonesPromised)).flat());
+
     // locations = await libcal.getLocations(lids);
     // let cids = "";
     // locations.forEach((location) => {
@@ -138,7 +141,18 @@ const Spaces = () => {
       categories = categories.concat(location.categories)
     });
 
-    let items = await libcal.getItems(lids);
+    let itemsPromised = []
+    locations.forEach((location) => {
+      itemsPromised.push(libcal.getItems(location.lid))
+    })
+
+    let itemsAtLocation = (await Promise.all(itemsPromised))
+    let items = []
+    itemsAtLocation.forEach((location, index) => {
+      location.forEach(item => {
+        items.push({ ...item, lid: Number(locations[index].lid), convertedLid: Number(convertedLids[index]) })
+      })
+    })
 
     items = items.map(item => {
 
@@ -152,6 +166,7 @@ const Spaces = () => {
 
       return { ...item, availability: difference < 30 ? "Available Now" : "Available " + moment(item.availability[0].from).fromNow() };
     }).sort((a, b) => {
+      // Group Id is category Id. No idea why they use different terms 
       const indexA = categories.findIndex(category => category.cid === a.groupId)
       const indexB = categories.findIndex(category => category.cid === b.groupId)
 
@@ -396,7 +411,7 @@ const Spaces = () => {
   };
 
   const handleRoomSelection = (room) => async () => {
-    window.location = `${origin}/reserve?id=${room.id}`
+    window.location = `${origin}/reserve?id=${room.id}&buildingId=${room.convertedLid}`
     // setSelectedRoom({ ...room, scrollPosition: window.scrollY });
     // //const roomData = await libcal.getRoom(room.id);
     // //setSelectedRoom({ ...roomData[0], scrollPosition: window.scrollY });

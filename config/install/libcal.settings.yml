@@ -3,3 +3,5 @@ libcal:
   client_id: ""
   client_secret: ""
   calendar_ids: ""
+  spaces_lids: ""
+  hours_lids: ""

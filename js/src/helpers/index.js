@@ -43,7 +43,7 @@ function generateDates(today = moment(), count = 3, flatten = false) {
       start = moment(start).add(1, "days");
     }
 
-    let padEndCount = 6 - moment(start).subtract(1, 'day').day();
+    let padEndCount = 42 - (padStartCount + daysInMonth);
 
     for (let padding = 1; padding <= padEndCount; padding += 1) {
       dates.push(null);
@@ -52,7 +52,7 @@ function generateDates(today = moment(), count = 3, flatten = false) {
 
   if (flatten) {
     dates = _.flatten(
-      _.chunk(_.chunk(dates, 7), 5).map((chunk) => _.flatten(_.zip(...chunk)))
+      _.chunk(_.chunk(dates, 7), 6).map((chunk) => _.flatten(_.zip(...chunk)))
     );
   }
 

@@ -51,17 +51,36 @@ const ReserveSpace = () => {
   const fetchAvailibility = async () => {
     try {
       const spaceId = queryString.parse(location.search).id;
+      const buildingId = queryString.parse(location.search).buildingId;
       const data = await libcal.getAvailability(spaceId);
+      const buidlingHours = await libcal.getHours(buildingId)
 
       const room = { ...data[0] };
       const availability = room.availability;
       setRoom({
         ...room,
-        availability: availability ? availability.map((slot) => ({
-          id: slot.from,
-          from: moment(slot.from),
-          to: moment(slot.to),
-        })) : [],
+        availability: availability ? availability.map((slot) => {
+
+          let from = moment(slot.from)
+          let to = moment(slot.to)
+
+          if (to.diff(from, "hours") > 4) {
+            const key = from.format("YYYY-MM-DD")
+            const hours = buidlingHours[0].dates[key].hours[0]
+
+            from = moment(`${key}T${hours.from}`, 'YYYY-MM-DDTh:mma')
+            to = moment(`${key}T${hours.to}`, 'YYYY-MM-DDTh:mma')
+          }
+
+          return ({
+            id: slot.from,
+            displayFrom: from,
+            displayTo: to,
+            from: moment(slot.from),
+            to: moment(slot.to),
+          })
+
+        }) : [],
       });
     } catch (error) {
       console.log(error);
@@ -151,7 +170,7 @@ const ReserveSpace = () => {
           }
         >
           <span class="slotTime">
-            {slot.from.format("hh:mmA")} — {slot.to.format("hh:mmA")}
+            {slot.displayFrom.format("hh:mmA")} — {slot.displayTo.format("hh:mmA")}
           </span>
         </div>
       );
@@ -165,7 +184,7 @@ const ReserveSpace = () => {
         key="slots"
         layout
       >
-        <span class="slotPrompt">Select up to 4 slots</span>
+        <span class="slotPrompt">Select up to {Math.min(render.length, 4)} slots</span>
         <div className="slot-list">{render}</div>
         <div className="d-flex mt-3">
           <button
@@ -362,7 +381,7 @@ const ReserveSpace = () => {
             <div class="roomBox">
               <div class="roomHeader">
                 <div class="roomImage">
-                  {room.image ? <img src={room.image} className="preview-img"></img> : null}
+                  {room.image ? <a href={room.image} data-lightbox="room-image"><img src={room.image} className="preview-img"></img></a> : null}
                 </div>
                 <div class="roomLabel">
                   <h3>{room.name}</h3>

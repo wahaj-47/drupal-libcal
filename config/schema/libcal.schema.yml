@@ -17,3 +17,10 @@ libcal.settings:
         calendar_ids:
           type: text
           label: "Calendar IDs:"
+        spaces_lids:
+          type: text
+          label: "Spaces location IDs:"
+        hours_lids:
+          type: text
+          label: "Hours location IDs:"
+
