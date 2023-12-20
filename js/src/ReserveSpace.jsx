@@ -69,7 +69,7 @@ const ReserveSpace = () => {
             const hours = buidlingHours[0].dates[key].hours[0]
 
             from = moment(`${key}T${hours.from}`, 'YYYY-MM-DDTh:mma')
-            to = moment(`${key}T${hours.to}`, 'YYYY-MM-DDTh:mma')
+            to = moment(`${key}T${hours.to}`, 'YYYY-MM-DDTh:mma').subtract(1, 'hour')
           }
 
           return ({

@@ -40,10 +40,10 @@ const Calendar = ({
     setCurrentIndex(slideIndex)
 
     let nextSlide = slideIndex
-    let index = nextSlide * 5;
+    let index = nextSlide * 6;
     while (!moment(datesToRender[index]).isValid()) {
       nextSlide += 1
-      index = nextSlide * 5;
+      index = nextSlide * 6;
     }
     setDate(moment(datesToRender[index]));
   };
