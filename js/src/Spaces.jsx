@@ -155,8 +155,7 @@ const Spaces = () => {
     })
 
     items = items.map(item => {
-
-      if (item.availability.length < 1)
+      if (!item.hasOwnProperty("availibility") || item.availability.length < 1)
         return { ...item, availability: "Unavailable" }
 
       const difference = moment(item.availability[0].from).diff(
