@@ -92,6 +92,8 @@ const RoomSkeleton = (key) => {
         </p>
         <div class="roomFooter">
           <div class="roomFooterSkeleton"></div>
+          <div class="roomFooterSkeleton"></div>
+          <div class="roomFooterSkeleton"></div>
         </div>
       </div>
     </div>

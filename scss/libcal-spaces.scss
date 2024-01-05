@@ -179,7 +179,7 @@ section#rooms,
   height: 100%;
 
   .roomDetailsSkeleton {
-    height: 8px;
+    height: 6px;
     width: 80%;
     background-color: #b0b0b0;
     border-radius: 4px;
@@ -187,10 +187,11 @@ section#rooms,
 }
 
 .roomFooterSkeleton {
-  height: 8px;
+  height: 6px;
   width: 80%;
   background-color: #b0b0b0;
   border-radius: 4px;
+  margin-bottom: 8px;
 }
 
 // end new styles
