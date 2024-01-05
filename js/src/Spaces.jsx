@@ -5,7 +5,7 @@ import parse from "html-react-parser";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-import _ from "lodash";
+import _, { forIn } from "lodash";
 import moment from "moment";
 
 import { libcal, origin } from "./services";
@@ -46,7 +46,8 @@ const Room = ({ room, handleClick }) => {
           <div class="roomLabel">
             <h3>{room.name}</h3>
             <span class="roomZone">{room.zoneName}</span>
-            {room.hasOwnProperty("availability") ? <span className={room.availability === "Available Now" ? "available" : ""}>{room.availability}</span> : <span>Checking availability...</span>}</div>
+            {room.hasOwnProperty("availability") ? <span className={room.availability === "Available Now" ? "available" : ""}>{room.availability}</span> : <span>Checking availability...</span>}
+          </div>
         </div>
       </motion.a>
       <div class="roomDetails">
@@ -58,6 +59,44 @@ const Room = ({ room, handleClick }) => {
     </div>
   );
 };
+
+const RoomSkeleton = (key) => {
+  return (
+    <div
+      key={key}
+      class="space-room">
+      <motion.a
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <div class="roomHeader pointer">
+          <div class="roomImage">
+            <div class="roomImageSkeleton"></div>
+          </div>
+          <div class="roomLabel">
+            <h3>
+              <div class="roomNameSkeleton"></div>
+            </h3>
+            <span class="roomZone">
+              <div class="roomZoneSkeleton"></div>
+            </span>
+            <span className="available">
+            </span>
+          </div>
+        </div>
+      </motion.a>
+      <div class="roomDetails">
+        <p>
+          <div class="roomDetailsSkeleton"></div>
+        </p>
+        <div class="roomFooter">
+          <div class="roomFooterSkeleton"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 // const RoomDetails = ({ room, goBack }) => {
 //   if (!room) return null;
@@ -356,6 +395,17 @@ const Spaces = () => {
     )
   }
 
+  const renderSkeletons = () => {
+    const render = []
+
+    // Add six placeholder skeletons if no items.
+    for (let index = 0; index < 6; index++) {
+      render.push(<RoomSkeleton key={index}></RoomSkeleton>)
+    }
+
+    return render;
+  }
+
   const renderItems = () => {
     let locations = store.locations;
     // let categories = store.categories;
@@ -449,7 +499,7 @@ const Spaces = () => {
       {/* {isSmallDevice ? ( */}
       {!isViewingDetails ? (
         <section id="rooms" className="space-column">
-          <AnimatePresence>{renderItems()}</AnimatePresence>
+          <AnimatePresence>{_.isEmpty(store.items) ? renderSkeletons() : renderItems()}</AnimatePresence>
         </section>
       ) : (
         <section id="selected-room" className="space-column">
