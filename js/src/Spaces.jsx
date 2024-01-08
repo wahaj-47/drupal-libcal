@@ -195,6 +195,8 @@ const Spaces = () => {
       })
     })
 
+    console.log(items)
+
     items = items.map(item => {
       if (!item.hasOwnProperty("availability") || item.availability.length < 1)
         return { ...item, availability: "Unavailable" }
