@@ -143,7 +143,7 @@ const ReserveSpace = () => {
     const last = sorted[sorted.length - 1];
 
     const next = moment(last).add(60, "minutes");
-    const max = moment(first).add(120, "minutes");
+    const max = moment(first).add(180, "minutes");
 
     const render = [];
 
@@ -184,7 +184,7 @@ const ReserveSpace = () => {
         key="slots"
         layout
       >
-        <span class="slotPrompt">Select up to {Math.min(render.length, 4)} slots</span>
+        <span class="slotPrompt">Select up to {Math.min(render.length, 6)} slots</span>
         <div className="slot-list">{render}</div>
         <div className="d-flex mt-3">
           <button

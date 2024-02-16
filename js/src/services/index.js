@@ -34,7 +34,7 @@ const libcal = {
   },
   getCategories: async (lids) => {
     try {
-      return await get(`${origin}/api/libcal/space/categories/${lids}`);
+      return await get(`${origin}/api/libcal/space/categories/${lids}?details=1`);
     } catch (error) {
       throw error
     }
