@@ -109,7 +109,7 @@ class LibCal extends ResourceBase {
           }
 
           $res = ['message' => $response];
-          return (new ModifiedResourceResponse($res))->setMaxAge(0);
+          return new ModifiedResourceResponse($res);
 
         case 'convert':
           $spaces_lids = $config->get('libcal.spaces_lids');
