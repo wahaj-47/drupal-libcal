@@ -54,8 +54,11 @@ const ReserveSpace = () => {
       const buildingId = queryString.parse(location.search).buildingId;
       const data = await libcal.getAvailability(spaceId);
       const buidlingHours = await libcal.getHours(buildingId)
+      const policyStatement = await libcal.getPolicies();
+      const categoryId = queryString.parse(location.search).categoryId;
 
-      const room = { ...data[0] };
+      const room = { ...data[0], policyStatement: policyStatement[categoryId] || "" };
+
       const availability = room.availability;
       setRoom({
         ...room,
@@ -391,6 +394,7 @@ const ReserveSpace = () => {
               </div>
               <div class="roomDetails">
                 <p>{parse(room.description)}</p>
+                <p>{room.policyStatement}</p>
                 <div class="roomFooter">
                   {/* insert room directions here */}
                 </div>

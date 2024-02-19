@@ -5,3 +5,5 @@ libcal:
   calendar_ids: ""
   spaces_lids: ""
   hours_lids: ""
+  category_ids: ""
+  policy_statements: ""

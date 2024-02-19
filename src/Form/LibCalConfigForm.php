@@ -24,6 +24,9 @@ class LibCalConfigForm extends ConfigFormBase {
     // Default settings.
     $config = $this->config('libcal.settings');
 
+
+    $form['#tree'] = TRUE;
+
     $form['host'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Host:'),
@@ -71,7 +74,114 @@ class LibCalConfigForm extends ConfigFormBase {
       '#description' => $this->t('Enter location IDs defined in the LibCal Hours module, separated by "," (commas).'),
     );
 
+    $category_ids = $config->get('libcal.category_ids');
+    $category_ids = explode("|", $category_ids);
+
+    $policy_statements = $config->get('libcal.policy_statements');
+    $policy_statements = explode("|", $policy_statements);
+
+    // Gather the number of names in the form already.
+    $num_statements = $form_state->get('num_statements');
+    // We have to ensure that there is at least one name field.
+    if ($num_statements === NULL) {
+      $num_policies = count($policy_statements);
+
+      $name_field = $form_state->set('num_statements', $num_policies);
+      $num_statements = $num_policies;
+    }
+
+    $form['policy_statements'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Policy statements'),
+      '#prefix' => '<div id="policy_statements-wrapper">',
+      '#suffix' => '</div>',
+    ];
+
+    for ($i = 0; $i < $num_statements; $i++) {
+      $form['policy_statements'][$i] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Policy') . ' ' . ($i + 1),
+      ];
+      $form['policy_statements'][$i]['category_id'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Category ID'),
+        '#default_value' => $category_ids[$i],
+      ];
+      $form['policy_statements'][$i]['statement'] = [
+        '#type' => 'textarea',
+        '#title' => $this->t('Statement'),
+        '#default_value' => $policy_statements[$i],
+      ];
+    }
+
+    $form['policy_statements']['actions'] = [
+      '#type' => 'actions',
+    ];
+    $form['policy_statements']['actions']['add'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Add'),
+      '#submit' => ['::addOne'],
+      '#ajax' => [
+        'callback' => '::addmoreCallback',
+        'wrapper' => 'policy_statements-wrapper',
+      ],
+    ];
+    // If there is more than one name, add the remove button.
+    if ($num_statements > 0) {
+      $form['policy_statements']['actions']['remove'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Remove'),
+        '#submit' => ['::removeCallback'],
+        '#ajax' => [
+          'callback' => '::addmoreCallback',
+          'wrapper' => 'policy_statements-wrapper',
+        ],
+      ];
+    }
+
+
     return $form;
+  }
+
+  /**
+   * Callback for both ajax-enabled buttons.
+   *
+   * Selects and returns the fieldset with the names in it.
+   */
+  public function addmoreCallback(array &$form, FormStateInterface $form_state) {
+    return $form['policy_statements'];
+  }
+
+  /**
+   * Submit handler for the "add-one-more" button.
+   *
+   * Increments the max counter and causes a rebuild.
+   */
+  public function addOne(array &$form, FormStateInterface $form_state) {
+    $name_field = $form_state->get('num_statements');
+    $add_button = $name_field + 1;
+    $form_state->set('num_statements', $add_button);
+    // Since our buildForm() method relies on the value of 'num_statements' to
+    // generate 'name' form elements, we have to tell the form to rebuild. If we
+    // don't do this, the form builder will not call buildForm().
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Submit handler for the "remove one" button.
+   *
+   * Decrements the max counter and causes a form rebuild.
+   */
+  public function removeCallback(array &$form, FormStateInterface $form_state) {
+    $name_field = $form_state->get('num_statements');
+    if ($name_field > 0) {
+      $remove_button = $name_field - 1;
+      $form_state->set('num_statements', $remove_button);
+    }
+    // Since our buildForm() method relies on the value of 'num_statements' to
+    // generate 'name' form elements, we have to tell the form to rebuild. If we
+    // don't do this, the form builder will not call buildForm().
+    $form_state->setRebuild();
   }
 
   private function isEmpty(string $value){
@@ -92,8 +202,8 @@ class LibCalConfigForm extends ConfigFormBase {
       $form_state->setErrorByName('client_secret', $this->t('This field is required.'));
     }
 
-    $spaces_lids = $form_state->getValue('spaces_lids');
-    $hours_lids = $form_state->getValue('hours_lids');
+    $spaces_lids = $form_state->getValue(['location_mapping', 'spaces_lids']);
+    $hours_lids = $form_state->getValue(['location_mapping','hours_lids']);
 
     $spaces_lids_list = explode(",", $spaces_lids);
     $hours_lids_list = explode(",", $hours_lids);
@@ -119,8 +229,29 @@ class LibCalConfigForm extends ConfigFormBase {
     $config->set('libcal.client_id', $form_state->getValue('client_id'));
     $config->set('libcal.client_secret', $form_state->getValue('client_secret'));
     $config->set('libcal.calendar_ids', $form_state->getValue('calendar_ids'));
-    $config->set('libcal.spaces_lids', $form_state->getValue('spaces_lids'));
-    $config->set('libcal.hours_lids', $form_state->getValue('hours_lids'));
+    $config->set('libcal.spaces_lids', $form_state->getValue(['location_mapping', 'spaces_lids']));
+    $config->set('libcal.hours_lids', $form_state->getValue(['location_mapping','hours_lids']));
+
+    $num_statements = $form_state->get('num_statements');
+
+    $category_ids = "";
+    $policy_statements = "";
+
+    for ($i = 0; $i < $num_statements; $i++) {
+
+      if($i > 0){
+        $category_ids .= "|";
+        $policy_statements .= "|";
+      }
+
+      $category_ids .= $form_state->getValue(['policy_statements', $i, 'category_id']);
+      $policy_statements .= $form_state->getValue(['policy_statements', $i, 'statement']);
+
+    }
+
+    $config->set('libcal.category_ids', $category_ids);
+    $config->set('libcal.policy_statements', $policy_statements);
+
     $config->save();
     return parent::submitForm($form, $form_state);
   }

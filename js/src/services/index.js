@@ -39,6 +39,13 @@ const libcal = {
       throw error
     }
   },
+  getPolicies: async () => {
+    try {
+      return await get(`${origin}/api/libcal/statements`);
+    } catch (error) {
+      throw error
+    }
+  },
   getHours: async (lids) => {
     try {
       return await get(`${origin}/api/libcal/hours/${lids}?to=${moment()

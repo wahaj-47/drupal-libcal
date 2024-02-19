@@ -95,6 +95,22 @@ class LibCal extends ResourceBase {
       $endpoint = $this->constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource);
     
       switch ($resource) {
+        case 'statements':
+          $category_ids = $config->get('libcal.category_ids');
+          $policy_statements = $config->get('libcal.policy_statements');
+          
+          $category_ids = explode("|", $category_ids);
+          $policy_statements = explode("|", $policy_statements);
+
+          $response = [];
+
+          foreach ($category_ids as $key=>$id) {
+            $response[$id] = $policy_statements[$key];
+          }
+
+          $res = ['message' => $response];
+          return (new ModifiedResourceResponse($res))->setMaxAge(0);
+
         case 'convert':
           $spaces_lids = $config->get('libcal.spaces_lids');
           $hours_lids = $config->get('libcal.hours_lids');
