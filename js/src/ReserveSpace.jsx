@@ -14,6 +14,7 @@ import moment from "moment";
 import { motion, AnimatePresence } from "framer-motion";
 import { libcal } from "./services";
 import Breadcrumb from "./components/Breadcrumb/Breadcrumb";
+import _ from "lodash";
 
 const status = Object.freeze({
   processing: Symbol("processing"),
@@ -67,18 +68,15 @@ const ReserveSpace = () => {
           let from = moment(slot.from)
           let to = moment(slot.to)
 
-          if (to.diff(from, "hours") > 4) {
-            const key = from.format("YYYY-MM-DD")
-            const hours = buidlingHours[0].dates[key].hours[0]
+          let display = `${from.format("hh:mmA")} — ${to.format("hh:mmA")}`;
 
-            from = moment(`${key}T${hours.from}`, 'YYYY-MM-DDTh:mma')
-            to = moment(`${key}T${hours.to}`, 'YYYY-MM-DDTh:mma').subtract(1, 'hour')
+          if (to.diff(from, "hours") > 4) {
+            display = "Library operating hours"
           }
 
           return ({
             id: slot.from,
-            displayFrom: from,
-            displayTo: to,
+            display: display,
             from: moment(slot.from),
             to: moment(slot.to),
           })
@@ -173,7 +171,7 @@ const ReserveSpace = () => {
           }
         >
           <span class="slotTime">
-            {slot.displayFrom.format("hh:mmA")} — {slot.displayTo.format("hh:mmA")}
+            {slot.display}
           </span>
         </div>
       );
