@@ -5,19 +5,22 @@ namespace Drupal\libcal\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-class LibCalConfigForm extends ConfigFormBase {
+class LibCalConfigForm extends ConfigFormBase
+{
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId()
+  {
     return 'libcal_config_form';
   }
 
-   /**
+  /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state)
+  {
     // Form constructor.
     $form = parent::buildForm($form, $form_state);
 
@@ -66,7 +69,7 @@ class LibCalConfigForm extends ConfigFormBase {
       '#default_value' => $config->get('libcal.spaces_lids'),
       '#description' => $this->t('Enter location IDs defined in the LibCal Spaces module, separated by "," (commas).'),
     );
-    
+
     $form['location_mapping']['hours_lids'] = array(
       '#type' => 'textfield',
       '#title' => t('Hours LIDs:'),
@@ -148,7 +151,8 @@ class LibCalConfigForm extends ConfigFormBase {
    *
    * Selects and returns the fieldset with the names in it.
    */
-  public function addmoreCallback(array &$form, FormStateInterface $form_state) {
+  public function addmoreCallback(array &$form, FormStateInterface $form_state)
+  {
     return $form['policy_statements'];
   }
 
@@ -157,7 +161,8 @@ class LibCalConfigForm extends ConfigFormBase {
    *
    * Increments the max counter and causes a rebuild.
    */
-  public function addOne(array &$form, FormStateInterface $form_state) {
+  public function addOne(array &$form, FormStateInterface $form_state)
+  {
     $name_field = $form_state->get('num_statements');
     $add_button = $name_field + 1;
     $form_state->set('num_statements', $add_button);
@@ -172,7 +177,8 @@ class LibCalConfigForm extends ConfigFormBase {
    *
    * Decrements the max counter and causes a form rebuild.
    */
-  public function removeCallback(array &$form, FormStateInterface $form_state) {
+  public function removeCallback(array &$form, FormStateInterface $form_state)
+  {
     $name_field = $form_state->get('num_statements');
     if ($name_field > 0) {
       $remove_button = $name_field - 1;
@@ -184,14 +190,16 @@ class LibCalConfigForm extends ConfigFormBase {
     $form_state->setRebuild();
   }
 
-  private function isEmpty(string $value){
+  private function isEmpty(string $value)
+  {
     return empty($value);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
     if ($this->isEmpty($form_state->getValue('host'))) {
       $form_state->setErrorByName('host', $this->t('This field is required.'));
     }
@@ -203,34 +211,33 @@ class LibCalConfigForm extends ConfigFormBase {
     }
 
     $spaces_lids = $form_state->getValue(['location_mapping', 'spaces_lids']);
-    $hours_lids = $form_state->getValue(['location_mapping','hours_lids']);
+    $hours_lids = $form_state->getValue(['location_mapping', 'hours_lids']);
 
     $spaces_lids_list = explode(",", $spaces_lids);
     $hours_lids_list = explode(",", $hours_lids);
 
-    if(
-      (count($spaces_lids_list) != count($hours_lids_list)) || 
-      ($this->isEmpty($spaces_lids) && !$this->isEmpty($hours_lids)) || 
+    if (
+      (count($spaces_lids_list) != count($hours_lids_list)) ||
+      ($this->isEmpty($spaces_lids) && !$this->isEmpty($hours_lids)) ||
       (!$this->isEmpty($spaces_lids) && $this->isEmpty($hours_lids))
-      )
-    {
+    ) {
       $form_state->setErrorByName('spaces_lids', $this->t('The number of Spaces location IDs do not match the number of Hours location IDs'));
       $form_state->setErrorByName('hours_lids', $this->t('The number of Spaces location IDs do not match the number of Hours location IDs'));
     }
-
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
     $config = $this->config('libcal.settings');
     $config->set('libcal.host', $form_state->getValue('host'));
     $config->set('libcal.client_id', $form_state->getValue('client_id'));
     $config->set('libcal.client_secret', $form_state->getValue('client_secret'));
     $config->set('libcal.calendar_ids', $form_state->getValue('calendar_ids'));
     $config->set('libcal.spaces_lids', $form_state->getValue(['location_mapping', 'spaces_lids']));
-    $config->set('libcal.hours_lids', $form_state->getValue(['location_mapping','hours_lids']));
+    $config->set('libcal.hours_lids', $form_state->getValue(['location_mapping', 'hours_lids']));
 
     $num_statements = $form_state->get('num_statements');
 
@@ -239,14 +246,13 @@ class LibCalConfigForm extends ConfigFormBase {
 
     for ($i = 0; $i < $num_statements; $i++) {
 
-      if($i > 0){
+      if ($i > 0) {
         $category_ids .= "|";
         $policy_statements .= "|";
       }
 
       $category_ids .= $form_state->getValue(['policy_statements', $i, 'category_id']);
       $policy_statements .= $form_state->getValue(['policy_statements', $i, 'statement']);
-
     }
 
     $config->set('libcal.category_ids', $category_ids);
@@ -259,12 +265,10 @@ class LibCalConfigForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames()
+  {
     return [
       'libcal.settings',
     ];
   }
-
 }
-
-?>
