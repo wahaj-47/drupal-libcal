@@ -119,6 +119,26 @@ class LibCal extends ResourceBase
           // Return the response with the ModifiedResourceResponse object.
           return new ModifiedResourceResponse($res);
 
+        case 'footers':
+          // Fetch the custom footers array from the configuration.
+          $footers = $config->get('libcal.custom_footer') ?? [];
+
+          $response = [];
+
+          // Iterate through the array of policy statements.
+          foreach ($footers as $footer) {
+            // Ensure both category_id and statement are set.
+            if (isset($footer['category_id']) && isset($footer['markup'])) {
+              $response[$footer['category_id']] = $footer['markup'];
+            }
+          }
+
+          // Prepare the response message.
+          $res = ['message' => $response];
+
+          // Return the response with the ModifiedResourceResponse object.
+          return new ModifiedResourceResponse($res);
+
         case 'convert':
           $spaces_lids = $config->get('libcal.spaces_lids');
           $hours_lids = $config->get('libcal.hours_lids');
