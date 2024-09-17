@@ -77,77 +77,260 @@ class LibCalConfigForm extends ConfigFormBase
       '#description' => $this->t('Enter location IDs defined in the LibCal Hours module, separated by "," (commas).'),
     );
 
-    $policy_settings = $config->get('libcal.policy_statements');
+    // $policy_settings = $config->get('libcal.policy_statements');
 
-    // Get and process category_ids
-    $category_ids = isset($policy_settings['category_ids']) ? $policy_settings['category_ids'] : '';
-    $category_ids = explode("|", $category_ids);
+    // // Get and process category_ids
+    // $category_ids = isset($policy_settings['category_ids']) ? $policy_settings['category_ids'] : '';
+    // $category_ids = explode("|", $category_ids);
 
-    // Get and process policy statements
-    $policy_statements = isset($policy_settings['statements']) ? $policy_settings['statements'] : '';
-    $policy_statements = explode("|", $policy_statements);
+    // // Get and process policy statements
+    // $policy_statements = isset($policy_settings['statements']) ? $policy_settings['statements'] : '';
+    // $policy_statements = explode("|", $policy_statements);
 
-    // Gather the number of names in the form already.
-    $num_statements = $form_state->get('num_statements');
-    // We have to ensure that there is at least one name field.
-    if ($num_statements === NULL) {
-      $num_policies = count($policy_statements);
+    // // Gather the number of names in the form already.
+    // $num_statements = $form_state->get('num_statements');
+    // // We have to ensure that there is at least one name field.
+    // if ($num_statements === NULL) {
+    //   $num_policies = count($policy_statements);
 
-      $name_field = $form_state->set('num_statements', $num_policies);
-      $num_statements = $num_policies;
+    //   $name_field = $form_state->set('num_statements', $num_policies);
+    //   $num_statements = $num_policies;
+    // }
+
+    // $form['policy_statements'] = [
+    //   '#type' => 'fieldset',
+    //   '#title' => $this->t('Policy statements'),
+    //   '#prefix' => '<div id="policy_statements-wrapper">',
+    //   '#suffix' => '</div>',
+    // ];
+
+    // for ($i = 0; $i < $num_statements; $i++) {
+    //   $form['policy_statements'][$i] = [
+    //     '#type' => 'fieldset',
+    //     '#title' => $this->t('Policy') . ' ' . ($i + 1),
+    //   ];
+    //   $form['policy_statements'][$i]['category_id'] = [
+    //     '#type' => 'textfield',
+    //     '#title' => $this->t('Category ID'),
+    //     '#default_value' => $category_ids[$i],
+    //   ];
+    //   $form['policy_statements'][$i]['statement'] = [
+    //     '#type' => 'textarea',
+    //     '#title' => $this->t('Statement'),
+    //     '#default_value' => $policy_statements[$i],
+    //   ];
+    // }
+
+    // $form['policy_statements']['actions'] = [
+    //   '#type' => 'actions',
+    // ];
+    // $form['policy_statements']['actions']['add'] = [
+    //   '#type' => 'submit',
+    //   '#value' => $this->t('Add'),
+    //   '#submit' => ['::addOne'],
+    //   '#ajax' => [
+    //     'callback' => '::updateCallback',
+    //     'wrapper' => 'policy_statements-wrapper',
+    //     'section' => 'policy_statements',
+    //     'counter' => 'num_statements'
+    //   ],
+    // ];
+    // // If there is more than one name, add the remove button.
+    // if ($num_statements > 0) {
+    //   $form['policy_statements']['actions']['remove'] = [
+    //     '#type' => 'submit',
+    //     '#value' => $this->t('Remove'),
+    //     '#submit' => ['::removeCallback'],
+    //     '#ajax' => [
+    //       'callback' => '::updateCallback',
+    //       'wrapper' => 'policy_statements-wrapper',
+    //       'section' => 'policy_statements',
+    //       'counter' => 'num_statements'
+    //     ],
+    //   ];
+    // }
+
+    // $footer_settings = $config->get('libcal.footers') ?? [];
+
+    // // Get the number of footers. Initialize if not set.
+    // $num_footers = $form_state->get('num_footers');
+    // if ($num_footers === NULL) {
+    //   $num_footers = count($footer_settings);
+    //   $form_state->set('num_footers', $num_footers);
+    // }
+
+    // // Build the form fieldset.
+    // $form['footers'] = [
+    //   '#type' => 'fieldset',
+    //   '#title' => $this->t('Custom Footers'),
+    //   '#prefix' => '<div id="footers-wrapper">',
+    //   '#suffix' => '</div>',
+    // ];
+
+    // // Loop to build form fields based on the number of footers.
+    // for ($i = 0; $i < $num_footers; $i++) {
+    //   $form['footers'][$i] = [
+    //     '#type' => 'fieldset',
+    //     '#title' => $this->t('Footer') . ' ' . ($i + 1),
+    //   ];
+    //   $form['footers'][$i]['category_id'] = [
+    //     '#type' => 'textfield',
+    //     '#title' => $this->t('Category ID'),
+    //     '#default_value' => $footer_settings[$i]['category_id'] ?? '',
+    //   ];
+    //   $form['footers'][$i]['statement'] = [
+    //     '#type' => 'textarea',
+    //     '#title' => $this->t('Statement'),
+    //     '#default_value' => $footer_settings[$i]['statement'] ?? '',
+    //   ];
+    // }
+
+    // // Actions: Add and Remove buttons.
+    // $form['footers']['actions'] = [
+    //   '#type' => 'actions',
+    // ];
+    // $form['footers']['actions']['add'] = [
+    //   '#type' => 'submit',
+    //   '#value' => $this->t('Add'),
+    //   '#submit' => ['::addOne'],
+    //   '#ajax' => [
+    //     'callback' => '::updateCallback',
+    //     'wrapper' => 'footers-wrapper',
+    //     'section' => 'footers',
+    //     'counter' => 'num_footers',
+    //   ],
+    // ];
+    // // Add remove button only if there is more than one footer.
+    // if ($num_footers > 0) {
+    //   $form['footers']['actions']['remove'] = [
+    //     '#type' => 'submit',
+    //     '#value' => $this->t('Remove'),
+    //     '#submit' => ['::removeCallback'],
+    //     '#ajax' => [
+    //       'callback' => '::updateCallback',
+    //       'wrapper' => 'footers-wrapper',
+    //       'section' => 'footers',
+    //       'counter' => 'num_footers',
+    //     ],
+    //   ];
+    // }
+
+    $policy_statements = $config->get('libcal.policy_statement') ?? [];
+    $policy_statement_count = $form_state->get('policy_statement_count');
+    if ($policy_statement_count === NULL) {
+      $num_footers = count($policy_statements);
+      $form_state->set('policy_statement_count', $num_footers);
     }
 
-    $form['policy_statements'] = [
+    $this->addMultipleTextField(
+      $form,
+      $form_state,
+      'policy_statement',
+      [
+        'category_id' => [
+          '#type' => 'textfield',
+          '#title' => $this->t('Category ID'),
+        ],
+        'statement' => [
+          '#type' => 'textarea',
+          '#title' => $this->t('Statement'),
+        ]
+      ],
+      $policy_statements
+    );
+
+    $footers = $config->get('libcal.custom_footer') ?? [];
+    $form_state->set('custom_footer_count', count($footers));
+
+    $this->addMultipleTextField(
+      $form,
+      $form_state,
+      'custom_footer',
+      [
+        'category_id' => [
+          '#type' => 'textfield',
+          '#title' => $this->t('Category ID'),
+        ],
+        'markup' => [
+          '#type' => 'text_format',
+          '#title' => $this->t('Markup'),
+          '#format' => 'full_html',
+        ]
+      ],
+      $footers
+    );
+
+    return $form;
+  }
+
+  /**
+   * Add textfield with add more button.
+   *
+   * @param array $form
+   *   Form concern.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   * @param string $field
+   *   Field name.
+   */
+  protected function addMultipleTextField(array &$form, FormStateInterface &$form_state, string $field, array $fields, array $values): void
+  {
+    $counter = $field . '_count';
+    $counterValue = $form_state->get($counter) ?? 0;
+    $form_state->set($counter, $counterValue);
+
+    $wrapperId = $field . '_wrapper';
+    $fieldset = $field . '_fieldset';
+    $form['#tree'] = TRUE;
+    $form[$fieldset] = [
       '#type' => 'fieldset',
-      '#title' => $this->t('Policy statements'),
-      '#prefix' => '<div id="policy_statements-wrapper">',
+      '#title' => $this->t(ucwords(str_replace("_", " ", $field)) . 's'),
+      '#prefix' => '<div id="' . $wrapperId . '">',
       '#suffix' => '</div>',
     ];
 
-    for ($i = 0; $i < $num_statements; $i++) {
-      $form['policy_statements'][$i] = [
+    for ($i = 0; $i < $counterValue; $i++) {
+      $form[$fieldset][$field][$i] = [
         '#type' => 'fieldset',
-        '#title' => $this->t('Policy') . ' ' . ($i + 1),
+        '#title' => $this->t(ucwords(str_replace("_", " ", $field))) . ' ' . ($i + 1),
       ];
-      $form['policy_statements'][$i]['category_id'] = [
-        '#type' => 'textfield',
-        '#title' => $this->t('Category ID'),
-        '#default_value' => $category_ids[$i],
-      ];
-      $form['policy_statements'][$i]['statement'] = [
-        '#type' => 'textarea',
-        '#title' => $this->t('Statement'),
-        '#default_value' => $policy_statements[$i],
-      ];
+
+      foreach ($fields as $key => $config) {
+        $form[$fieldset][$field][$i][$key] = $config;
+        $form[$fieldset][$field][$i][$key]['#default_value'] = $values[$i][$key] ?? '';
+      }
     }
 
-    $form['policy_statements']['actions'] = [
+    $form[$fieldset]['actions'] = [
       '#type' => 'actions',
     ];
-    $form['policy_statements']['actions']['add'] = [
+    $form[$fieldset]['actions']['add_name'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Add'),
-      '#submit' => ['::addOne'],
+      '#value' => $this->t('Add ' . $this->t(ucwords(str_replace("_", " ", $field)))),
+      '#name' => 'add-' . $wrapperId,
+      '#submit' => [[$this, 'addOne']],
       '#ajax' => [
-        'callback' => '::addmoreCallback',
-        'wrapper' => 'policy_statements-wrapper',
+        'callback' => [$this, 'addMoreCallback'],
+        'wrapper' => $wrapperId,
+        'target' => $fieldset,
+        'counter' => $counter,
       ],
     ];
     // If there is more than one name, add the remove button.
-    if ($num_statements > 0) {
-      $form['policy_statements']['actions']['remove'] = [
+    if ($counterValue > 0) {
+      $form[$fieldset]['actions']['remove_name'] = [
         '#type' => 'submit',
-        '#value' => $this->t('Remove'),
-        '#submit' => ['::removeCallback'],
+        '#value' => $this->t('Remove one'),
+        '#name' => 'remove-' . $wrapperId,
+        '#submit' => [[$this, 'removeCallback']],
         '#ajax' => [
-          'callback' => '::addmoreCallback',
-          'wrapper' => 'policy_statements-wrapper',
+          'callback' => [$this, 'addMoreCallback'],
+          'wrapper' => $wrapperId,
+          'target' => $fieldset,
+          'counter' => $counter,
         ],
       ];
     }
-
-
-    return $form;
   }
 
   /**
@@ -155,9 +338,13 @@ class LibCalConfigForm extends ConfigFormBase
    *
    * Selects and returns the fieldset with the names in it.
    */
-  public function addmoreCallback(array &$form, FormStateInterface $form_state)
+  public function addMoreCallback(array &$form, FormStateInterface $form_state)
   {
-    return $form['policy_statements'];
+    $triggerElement = $form_state->getTriggeringElement();
+    if (empty($targetElement = $triggerElement['#ajax']['target'])) {
+      return [];
+    }
+    return $form[$targetElement] ?? [];
   }
 
   /**
@@ -167,12 +354,12 @@ class LibCalConfigForm extends ConfigFormBase
    */
   public function addOne(array &$form, FormStateInterface $form_state)
   {
-    $name_field = $form_state->get('num_statements');
-    $add_button = $name_field + 1;
-    $form_state->set('num_statements', $add_button);
-    // Since our buildForm() method relies on the value of 'num_statements' to
-    // generate 'name' form elements, we have to tell the form to rebuild. If we
-    // don't do this, the form builder will not call buildForm().
+    $triggerElement = $form_state->getTriggeringElement();
+    if (empty($counter = $triggerElement['#ajax']['counter'])) {
+      return;
+    }
+    $counterValue = $form_state->get($counter);
+    $form_state->set($counter, $counterValue + 1);
     $form_state->setRebuild();
   }
 
@@ -183,14 +370,14 @@ class LibCalConfigForm extends ConfigFormBase
    */
   public function removeCallback(array &$form, FormStateInterface $form_state)
   {
-    $name_field = $form_state->get('num_statements');
-    if ($name_field > 0) {
-      $remove_button = $name_field - 1;
-      $form_state->set('num_statements', $remove_button);
+    $triggerElement = $form_state->getTriggeringElement();
+    if (empty($counter = $triggerElement['#ajax']['counter'])) {
+      return;
     }
-    // Since our buildForm() method relies on the value of 'num_statements' to
-    // generate 'name' form elements, we have to tell the form to rebuild. If we
-    // don't do this, the form builder will not call buildForm().
+    $counterValue = $form_state->get($counter);
+    if ($counterValue > 0) {
+      $form_state->set($counter, $counterValue - 1);
+    }
     $form_state->setRebuild();
   }
 
@@ -243,25 +430,43 @@ class LibCalConfigForm extends ConfigFormBase
     $config->set('libcal.spaces_lids', $form_state->getValue(['location_mapping', 'spaces_lids']));
     $config->set('libcal.hours_lids', $form_state->getValue(['location_mapping', 'hours_lids']));
 
-    $num_statements = $form_state->get('num_statements');
+    // Get the values from the form.
+    foreach (['policy_statement', 'custom_footer'] as $field) {
+      $values = $form_state->getValue($field . '_fieldset');
 
-    $category_ids = [];
-    $policy_statements = [];
+      $data = [];
+      if (isset($values[$field])) {
+        foreach ($values[$field] as $item) {
+          $data[] = [
+            'category_id' => $item['category_id'] ?? '',
+            'statement' => $item['statement'] ?? '',
+          ];
+        }
+      }
 
-    // Collect values for each statement
-    for ($i = 0; $i < $num_statements; $i++) {
-      $category_ids[] = $form_state->getValue(['policy_statements', $i, 'category_id']);
-      $policy_statements[] = $form_state->getValue(['policy_statements', $i, 'statement']);
+      // Save the data to the configuration.
+      $config->set('libcal.' . $field, $data);
     }
 
-    // Prepare the mapping array for the config
-    $policy_settings = [
-      'category_ids' => implode("|", $category_ids),
-      'statements' => implode("|", $policy_statements),
-    ];
+    // $num_statements = $form_state->get('num_statements');
 
-    // Set the updated policy_settings array back into the config
-    $config->set('libcal.policy_statements', $policy_settings);
+    // $category_ids = [];
+    // $policy_statements = [];
+
+    // // Collect values for each statement
+    // for ($i = 0; $i < $num_statements; $i++) {
+    //   $category_ids[] = $form_state->getValue(['policy_statements', $i, 'category_id']);
+    //   $policy_statements[] = $form_state->getValue(['policy_statements', $i, 'statement']);
+    // }
+
+    // // Prepare the mapping array for the config
+    // $policy_settings = [
+    //   'category_ids' => implode("|", $category_ids),
+    //   'statements' => implode("|", $policy_statements),
+    // ];
+
+    // // Set the updated policy_settings array back into the config
+    // $config->set('libcal.policy_statements', $policy_settings);
 
     $config->save();
     return parent::submitForm($form, $form_state);

@@ -23,8 +23,8 @@ libcal.settings:
         hours_lids:
           type: text
           label: "Hours location IDs:"
-        policy_statements:
-          type: mapping
+        policy_statement:
+          type: sequence
           label: "Policy settings"
           mapping:
             category_ids:
@@ -33,3 +33,13 @@ libcal.settings:
             statements:
               type: text
               label: "Policy statements:"
+        custom_footer:
+          type: sequence
+          label: "Footers"
+          mapping:
+            category_id:
+              type: text
+              label: "Space category IDs:"
+            markup:
+              type: long_text
+              label: "Custom footer:"

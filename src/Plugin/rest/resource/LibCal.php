@@ -100,22 +100,23 @@ class LibCal extends ResourceBase
 
       switch ($resource) {
         case 'statements':
-          $policy_settings = $config->get('libcal.policy_statements');
-
-          // Access and process the values from the policy_settings mapping
-          $category_ids = isset($policy_settings['category_ids']) ? explode("|", $policy_settings['category_ids']) : [];
-          $policy_statements = isset($policy_settings['statements']) ? explode("|", $policy_settings['statements']) : [];
+          // Fetch the policy statements array from the configuration.
+          $policy_settings = $config->get('libcal.policy_statement') ?? [];
 
           $response = [];
 
-          // Ensure both arrays are the same length
-          foreach ($category_ids as $key => $id) {
-            if (isset($policy_statements[$key])) {
-              $response[$id] = $policy_statements[$key];
+          // Iterate through the array of policy statements.
+          foreach ($policy_settings as $setting) {
+            // Ensure both category_id and statement are set.
+            if (isset($setting['category_id']) && isset($setting['statement'])) {
+              $response[$setting['category_id']] = $setting['statement'];
             }
           }
 
+          // Prepare the response message.
           $res = ['message' => $response];
+
+          // Return the response with the ModifiedResourceResponse object.
           return new ModifiedResourceResponse($res);
 
         case 'convert':
