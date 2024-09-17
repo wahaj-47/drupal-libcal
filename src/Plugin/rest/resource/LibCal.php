@@ -35,28 +35,31 @@ use GuzzleHttp\Exception\RequestException;
  * For accessing Drupal entities through REST interface use
  * \Drupal\rest\Plugin\rest\resource\EntityResource plugin.
  */
-class LibCal extends ResourceBase {
+class LibCal extends ResourceBase
+{
 
-  private function getQueryParams($params){
+  private function getQueryParams($params)
+  {
     $args = "?";
 
     foreach ($params as $key => $value) {
-      $args = $args.$key."=".$value."&";
+      $args = $args . $key . "=" . $value . "&";
     }
     $args = substr($args, 0, -1);
 
     return $args;
   }
 
-  private function constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource){
+  private function constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource)
+  {
     $endpoint = $resource;
 
-    if($sub_resource){
-      $endpoint = $endpoint."/".$sub_resource;
-      if($sub_sub_resource){
-        $endpoint = $endpoint."/".$sub_sub_resource;
-        if($sub_sub_sub_resource){
-          $endpoint = $endpoint."/".$sub_sub_sub_resource;
+    if ($sub_resource) {
+      $endpoint = $endpoint . "/" . $sub_resource;
+      if ($sub_sub_resource) {
+        $endpoint = $endpoint . "/" . $sub_sub_resource;
+        if ($sub_sub_sub_resource) {
+          $endpoint = $endpoint . "/" . $sub_sub_sub_resource;
         }
       }
     }
@@ -65,27 +68,28 @@ class LibCal extends ResourceBase {
   }
 
   private function postAccessToken()
-    {
-      try {
-        $config = \Drupal::config('libcal.settings');
-        $response = \Drupal::httpClient()->post($config->get('libcal.host')."/1.1/oauth/token", [
-            'json' => [
-                'client_id' => $config->get("libcal.client_id"),
-                'client_secret' => $config->get("libcal.client_secret"),
-                'grant_type' => "client_credentials",
-            ]
-        ]);
-        return json_decode((string)$response->getBody());
-      } catch (RequestException $e) {
-        print_r($e->getMessage());
-        return null;
-      }
+  {
+    try {
+      $config = \Drupal::config('libcal.settings');
+      $response = \Drupal::httpClient()->post($config->get('libcal.host') . "/1.1/oauth/token", [
+        'json' => [
+          'client_id' => $config->get("libcal.client_id"),
+          'client_secret' => $config->get("libcal.client_secret"),
+          'grant_type' => "client_credentials",
+        ]
+      ]);
+      return json_decode((string)$response->getBody());
+    } catch (RequestException $e) {
+      print_r($e->getMessage());
+      return null;
     }
+  }
 
   /**
    * Responds to GET requests.
    */
-  public function get($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource) {
+  public function get($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource)
+  {
     try {
       $config = \Drupal::config('libcal.settings');
       $access_token = $this->postAccessToken()->access_token;
@@ -93,19 +97,22 @@ class LibCal extends ResourceBase {
       $params = \Drupal::request()->query->all();
       $args = $this->getQueryParams($params);
       $endpoint = $this->constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource);
-    
+
       switch ($resource) {
         case 'statements':
-          $category_ids = $config->get('libcal.category_ids');
-          $policy_statements = $config->get('libcal.policy_statements');
-          
-          $category_ids = explode("|", $category_ids);
-          $policy_statements = explode("|", $policy_statements);
+          $policy_settings = $config->get('libcal.policy_statements');
+
+          // Access and process the values from the policy_settings mapping
+          $category_ids = isset($policy_settings['category_ids']) ? explode("|", $policy_settings['category_ids']) : [];
+          $policy_statements = isset($policy_settings['statements']) ? explode("|", $policy_settings['statements']) : [];
 
           $response = [];
 
-          foreach ($category_ids as $key=>$id) {
-            $response[$id] = $policy_statements[$key];
+          // Ensure both arrays are the same length
+          foreach ($category_ids as $key => $id) {
+            if (isset($policy_statements[$key])) {
+              $response[$id] = $policy_statements[$key];
+            }
           }
 
           $res = ['message' => $response];
@@ -125,39 +132,38 @@ class LibCal extends ResourceBase {
 
           foreach ($query_lids_list as $lid) {
             $index = array_search($lid, $spaces_lids_list);
-            $converted_lids = $converted_lids.$hours_lids_list[$index].",";
+            $converted_lids = $converted_lids . $hours_lids_list[$index] . ",";
           }
 
           $converted_lids = substr($converted_lids, 0, -1);
 
           $res = ['message' => $converted_lids];
           return (new ModifiedResourceResponse($res))->setMaxAge(0);
-        
+
         case 'calendars':
-          $response = \Drupal::httpClient()->get($config->get('libcal.host')."/1.1/".$resource."/".$config->get('libcal.calendar_ids').$args, [
+          $response = \Drupal::httpClient()->get($config->get('libcal.host') . "/1.1/" . $resource . "/" . $config->get('libcal.calendar_ids') . $args, [
             'headers' => [
-                'Authorization' => 'Bearer '.$access_token
+              'Authorization' => 'Bearer ' . $access_token
             ]
           ]);
           break;
-        
+
         default:
-          $response = \Drupal::httpClient()->get($config->get('libcal.host')."/1.1/".$endpoint.$args, [
-              'headers' => [
-                  'Authorization' => 'Bearer '.$access_token
-              ]
+          $response = \Drupal::httpClient()->get($config->get('libcal.host') . "/1.1/" . $endpoint . $args, [
+            'headers' => [
+              'Authorization' => 'Bearer ' . $access_token
+            ]
           ]);
           break;
       }
 
       $res = ['message' => json_decode((string)$response->getBody(), true)];
       return (new ModifiedResourceResponse($res))->setMaxAge(0);
-
     } catch (RequestException $e) {
 
       $error = $e->getResponse();
 
-      if($error){
+      if ($error) {
         $error_message = ['message' => json_decode($error->getBody(), true)];
         $status_code = $error->getStatusCode();
       }
@@ -169,28 +175,28 @@ class LibCal extends ResourceBase {
   /**
    * Responds to POST requests.
    */
-  public function post($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource, $data) {
+  public function post($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource, $data)
+  {
     try {
       $config = \Drupal::config('libcal.settings');
       $access_token = $this->postAccessToken()->access_token;
 
       $endpoint = $this->constructEndpoint($resource, $sub_resource, $sub_sub_resource, $sub_sub_sub_resource);
 
-      $response = \Drupal::httpClient()->post($config->get('libcal.host')."/1.1/".$endpoint, [
-          'headers' => [
-              'Authorization' => 'Bearer '.$access_token
-          ],
-          'json' => $data
+      $response = \Drupal::httpClient()->post($config->get('libcal.host') . "/1.1/" . $endpoint, [
+        'headers' => [
+          'Authorization' => 'Bearer ' . $access_token
+        ],
+        'json' => $data
       ]);
 
       $res = ['message' => json_decode((string)$response->getBody(), true)];
       return (new ModifiedResourceResponse($res))->setMaxAge(0);
-
     } catch (RequestException $e) {
 
       $error = $e->getResponse();
 
-      if($error){
+      if ($error) {
         // Get the response body as a string
         $response_body = (string) $error->getBody();
 
@@ -216,7 +222,8 @@ class LibCal extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public function routes() {
+  public function routes()
+  {
     $collection = parent::routes();
     // Add defaults for optional parameters.
     $defaults = [
@@ -230,5 +237,4 @@ class LibCal extends ResourceBase {
     }
     return $collection;
   }
-
 }

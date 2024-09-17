@@ -23,9 +23,13 @@ libcal.settings:
         hours_lids:
           type: text
           label: "Hours location IDs:"
-        category_ids:
-          type: text
-          label: "Space category IDs:"
         policy_statements:
-          type: text
-          label: "Policy statements:"
+          type: mapping
+          label: "Policy settings"
+          mapping:
+            category_ids:
+              type: text
+              label: "Space category IDs:"
+            statements:
+              type: text
+              label: "Policy statements:"

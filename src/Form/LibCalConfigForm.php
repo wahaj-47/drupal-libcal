@@ -77,10 +77,14 @@ class LibCalConfigForm extends ConfigFormBase
       '#description' => $this->t('Enter location IDs defined in the LibCal Hours module, separated by "," (commas).'),
     );
 
-    $category_ids = $config->get('libcal.category_ids');
+    $policy_settings = $config->get('libcal.policy_statements');
+
+    // Get and process category_ids
+    $category_ids = isset($policy_settings['category_ids']) ? $policy_settings['category_ids'] : '';
     $category_ids = explode("|", $category_ids);
 
-    $policy_statements = $config->get('libcal.policy_statements');
+    // Get and process policy statements
+    $policy_statements = isset($policy_settings['statements']) ? $policy_settings['statements'] : '';
     $policy_statements = explode("|", $policy_statements);
 
     // Gather the number of names in the form already.
@@ -241,22 +245,23 @@ class LibCalConfigForm extends ConfigFormBase
 
     $num_statements = $form_state->get('num_statements');
 
-    $category_ids = "";
-    $policy_statements = "";
+    $category_ids = [];
+    $policy_statements = [];
 
+    // Collect values for each statement
     for ($i = 0; $i < $num_statements; $i++) {
-
-      if ($i > 0) {
-        $category_ids .= "|";
-        $policy_statements .= "|";
-      }
-
-      $category_ids .= $form_state->getValue(['policy_statements', $i, 'category_id']);
-      $policy_statements .= $form_state->getValue(['policy_statements', $i, 'statement']);
+      $category_ids[] = $form_state->getValue(['policy_statements', $i, 'category_id']);
+      $policy_statements[] = $form_state->getValue(['policy_statements', $i, 'statement']);
     }
 
-    $config->set('libcal.category_ids', $category_ids);
-    $config->set('libcal.policy_statements', $policy_statements);
+    // Prepare the mapping array for the config
+    $policy_settings = [
+      'category_ids' => implode("|", $category_ids),
+      'statements' => implode("|", $policy_statements),
+    ];
+
+    // Set the updated policy_settings array back into the config
+    $config->set('libcal.policy_statements', $policy_settings);
 
     $config->save();
     return parent::submitForm($form, $form_state);
