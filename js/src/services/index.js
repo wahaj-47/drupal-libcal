@@ -46,18 +46,18 @@ const libcal = {
       throw error
     }
   },
+  getFooters: async () => {
+    try {
+      return await get(`${origin}/api/libcal/footers`);
+    } catch (error) {
+      throw error
+    }
+  },
   getHours: async (lids) => {
     try {
       return await get(`${origin}/api/libcal/hours/${lids}?to=${moment()
         .add(31, "days")
         .format("YYYY-MM-DD")}`);
-    } catch (error) {
-      throw error
-    }
-  },
-  getConvertedLocationIDs: async (lids) => {
-    try {
-      return await get(`${origin}/api/libcal/convert?lids=${lids}`);
     } catch (error) {
       throw error
     }

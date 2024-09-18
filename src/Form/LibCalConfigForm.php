@@ -30,200 +30,61 @@ class LibCalConfigForm extends ConfigFormBase
 
     $form['#tree'] = TRUE;
 
-    $form['host'] = [
+    // Add vertical tabs to the form.
+    $form['tabs'] = [
+      '#type' => 'vertical_tabs',
+      '#title' => $this->t('Settings'),
+    ];
+
+    // Create a tab for Policy Statements.
+    $form['api_config_tab'] = [
+      '#type' => 'details',
+      '#title' => $this->t('API Config'),
+      '#group' => 'tabs', // This groups it under the vertical tabs.
+    ];
+
+    $form['api_config_tab']['host'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Host:'),
       '#default_value' => $config->get('libcal.host'),
       '#description' => $this->t('Enter your LibCal app host.'),
     ];
-    $form['client_id'] = [
+    $form['api_config_tab']['client_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Client ID:'),
       '#default_value' => $config->get('libcal.client_id'),
       '#description' => $this->t('Enter your LibCal app client ID.'),
     ];
-    $form['client_secret'] = [
+    $form['api_config_tab']['client_secret'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Client Secret:'),
       '#default_value' => $config->get('libcal.client_secret'),
       '#description' => $this->t('Enter your LibCal app client secret.'),
     ];
-    $form['calendar_ids'] = [
+    $form['api_config_tab']['calendar_ids'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Calendar IDs:'),
       '#default_value' => $config->get('libcal.calendar_ids'),
       '#description' => $this->t('Enter your LibCal Calendar IDs, separated by "," (commas).'),
     ];
 
-    $form['location_mapping'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Location ID Mapping:'),
-      '#collapsible' => FALSE,
-      '#collapsed' => FALSE,
-      '#description' => $this->t('Create a mapping between LibCal Space location and LibCal Hours location. Each comma separated Space location ID will be associated with the corresponding Hours location ID.'),
-    );
-
-    $form['location_mapping']['spaces_lids'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Spaces LIDs:'),
-      '#default_value' => $config->get('libcal.spaces_lids'),
-      '#description' => $this->t('Enter location IDs defined in the LibCal Spaces module, separated by "," (commas).'),
-    );
-
-    $form['location_mapping']['hours_lids'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Hours LIDs:'),
-      '#default_value' => $config->get('libcal.hours_lids'),
-      '#description' => $this->t('Enter location IDs defined in the LibCal Hours module, separated by "," (commas).'),
-    );
-
-    // $policy_settings = $config->get('libcal.policy_statements');
-
-    // // Get and process category_ids
-    // $category_ids = isset($policy_settings['category_ids']) ? $policy_settings['category_ids'] : '';
-    // $category_ids = explode("|", $category_ids);
-
-    // // Get and process policy statements
-    // $policy_statements = isset($policy_settings['statements']) ? $policy_settings['statements'] : '';
-    // $policy_statements = explode("|", $policy_statements);
-
-    // // Gather the number of names in the form already.
-    // $num_statements = $form_state->get('num_statements');
-    // // We have to ensure that there is at least one name field.
-    // if ($num_statements === NULL) {
-    //   $num_policies = count($policy_statements);
-
-    //   $name_field = $form_state->set('num_statements', $num_policies);
-    //   $num_statements = $num_policies;
-    // }
-
-    // $form['policy_statements'] = [
-    //   '#type' => 'fieldset',
-    //   '#title' => $this->t('Policy statements'),
-    //   '#prefix' => '<div id="policy_statements-wrapper">',
-    //   '#suffix' => '</div>',
-    // ];
-
-    // for ($i = 0; $i < $num_statements; $i++) {
-    //   $form['policy_statements'][$i] = [
-    //     '#type' => 'fieldset',
-    //     '#title' => $this->t('Policy') . ' ' . ($i + 1),
-    //   ];
-    //   $form['policy_statements'][$i]['category_id'] = [
-    //     '#type' => 'textfield',
-    //     '#title' => $this->t('Category ID'),
-    //     '#default_value' => $category_ids[$i],
-    //   ];
-    //   $form['policy_statements'][$i]['statement'] = [
-    //     '#type' => 'textarea',
-    //     '#title' => $this->t('Statement'),
-    //     '#default_value' => $policy_statements[$i],
-    //   ];
-    // }
-
-    // $form['policy_statements']['actions'] = [
-    //   '#type' => 'actions',
-    // ];
-    // $form['policy_statements']['actions']['add'] = [
-    //   '#type' => 'submit',
-    //   '#value' => $this->t('Add'),
-    //   '#submit' => ['::addOne'],
-    //   '#ajax' => [
-    //     'callback' => '::updateCallback',
-    //     'wrapper' => 'policy_statements-wrapper',
-    //     'section' => 'policy_statements',
-    //     'counter' => 'num_statements'
-    //   ],
-    // ];
-    // // If there is more than one name, add the remove button.
-    // if ($num_statements > 0) {
-    //   $form['policy_statements']['actions']['remove'] = [
-    //     '#type' => 'submit',
-    //     '#value' => $this->t('Remove'),
-    //     '#submit' => ['::removeCallback'],
-    //     '#ajax' => [
-    //       'callback' => '::updateCallback',
-    //       'wrapper' => 'policy_statements-wrapper',
-    //       'section' => 'policy_statements',
-    //       'counter' => 'num_statements'
-    //     ],
-    //   ];
-    // }
-
-    // $footer_settings = $config->get('libcal.footers') ?? [];
-
-    // // Get the number of footers. Initialize if not set.
-    // $num_footers = $form_state->get('num_footers');
-    // if ($num_footers === NULL) {
-    //   $num_footers = count($footer_settings);
-    //   $form_state->set('num_footers', $num_footers);
-    // }
-
-    // // Build the form fieldset.
-    // $form['footers'] = [
-    //   '#type' => 'fieldset',
-    //   '#title' => $this->t('Custom Footers'),
-    //   '#prefix' => '<div id="footers-wrapper">',
-    //   '#suffix' => '</div>',
-    // ];
-
-    // // Loop to build form fields based on the number of footers.
-    // for ($i = 0; $i < $num_footers; $i++) {
-    //   $form['footers'][$i] = [
-    //     '#type' => 'fieldset',
-    //     '#title' => $this->t('Footer') . ' ' . ($i + 1),
-    //   ];
-    //   $form['footers'][$i]['category_id'] = [
-    //     '#type' => 'textfield',
-    //     '#title' => $this->t('Category ID'),
-    //     '#default_value' => $footer_settings[$i]['category_id'] ?? '',
-    //   ];
-    //   $form['footers'][$i]['statement'] = [
-    //     '#type' => 'textarea',
-    //     '#title' => $this->t('Statement'),
-    //     '#default_value' => $footer_settings[$i]['statement'] ?? '',
-    //   ];
-    // }
-
-    // // Actions: Add and Remove buttons.
-    // $form['footers']['actions'] = [
-    //   '#type' => 'actions',
-    // ];
-    // $form['footers']['actions']['add'] = [
-    //   '#type' => 'submit',
-    //   '#value' => $this->t('Add'),
-    //   '#submit' => ['::addOne'],
-    //   '#ajax' => [
-    //     'callback' => '::updateCallback',
-    //     'wrapper' => 'footers-wrapper',
-    //     'section' => 'footers',
-    //     'counter' => 'num_footers',
-    //   ],
-    // ];
-    // // Add remove button only if there is more than one footer.
-    // if ($num_footers > 0) {
-    //   $form['footers']['actions']['remove'] = [
-    //     '#type' => 'submit',
-    //     '#value' => $this->t('Remove'),
-    //     '#submit' => ['::removeCallback'],
-    //     '#ajax' => [
-    //       'callback' => '::updateCallback',
-    //       'wrapper' => 'footers-wrapper',
-    //       'section' => 'footers',
-    //       'counter' => 'num_footers',
-    //     ],
-    //   ];
-    // }
+    // Create a tab for Policy Statements.
+    $form['policy_statement_tab'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Policy Statements'),
+      '#group' => 'tabs', // This groups it under the vertical tabs.
+    ];
 
     $policy_statements = $config->get('libcal.policy_statement') ?? [];
     $policy_statement_count = $form_state->get('policy_statement_count');
     if ($policy_statement_count === NULL) {
-      $num_footers = count($policy_statements);
-      $form_state->set('policy_statement_count', $num_footers);
+      $num_statements = count($policy_statements);
+      $form_state->set('policy_statement_count', $num_statements);
     }
 
     $this->addMultipleTextField(
-      $form,
+      $form['policy_statement_tab'],
+      'policy_statement_tab',
       $form_state,
       'policy_statement',
       [
@@ -239,17 +100,37 @@ class LibCalConfigForm extends ConfigFormBase
       $policy_statements
     );
 
-    $footers = $config->get('libcal.custom_footer') ?? [];
-    $form_state->set('custom_footer_count', count($footers));
+    // Create a tab for Policy Statements.
+    $form['custom_footer_tab'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Custom Footers'),
+      '#group' => 'tabs', // This groups it under the vertical tabs.
+    ];
+
+    $custom_footers = $config->get('libcal.custom_footer') ?? [];
+    $custom_footer_count = $form_state->get('custom_footer_count');
+    if ($custom_footer_count === NULL) {
+      $num_footers = count($custom_footers);
+      $form_state->set('custom_footer_count', $num_footers);
+    }
+
+    $id_options = $this->fetchSpaceOptions();
 
     $this->addMultipleTextField(
-      $form,
+      $form['custom_footer_tab'],
+      'custom_footer_tab',
       $form_state,
       'custom_footer',
       [
-        'category_id' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Category ID'),
+        'id' => [
+          '#type' => 'select',
+          '#multiple' => true,
+          '#title' => $this->t('Spaces'),
+          '#options' => $id_options,
+          '#attributes' => ['class' => ['chosen-select'], 'data-placeholder' => $this->t('Select spaces that will share this footer')],
+          '#attached' => [
+            'library' => ['libcal/chosen'],
+          ],
         ],
         'markup' => [
           '#type' => 'text_format',
@@ -257,7 +138,7 @@ class LibCalConfigForm extends ConfigFormBase
           '#format' => 'full_html',
         ]
       ],
-      $footers
+      $custom_footers
     );
 
     return $form;
@@ -273,7 +154,7 @@ class LibCalConfigForm extends ConfigFormBase
    * @param string $field
    *   Field name.
    */
-  protected function addMultipleTextField(array &$form, FormStateInterface &$form_state, string $field, array $fields, array $values): void
+  protected function addMultipleTextField(array &$form, string $tab, FormStateInterface &$form_state, string $field, array $fields, array $values): void
   {
     $counter = $field . '_count';
     $counterValue = $form_state->get($counter) ?? 0;
@@ -283,8 +164,7 @@ class LibCalConfigForm extends ConfigFormBase
     $fieldset = $field . '_fieldset';
     $form['#tree'] = TRUE;
     $form[$fieldset] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t(ucwords(str_replace("_", " ", $field)) . 's'),
+      '#type' => 'container',
       '#prefix' => '<div id="' . $wrapperId . '">',
       '#suffix' => '</div>',
     ];
@@ -297,7 +177,11 @@ class LibCalConfigForm extends ConfigFormBase
 
       foreach ($fields as $key => $config) {
         $form[$fieldset][$field][$i][$key] = $config;
-        $form[$fieldset][$field][$i][$key]['#default_value'] = $values[$i][$key] ?? '';
+        if ($form[$fieldset][$field][$i][$key]['#type'] == 'text_format') {
+          $form[$fieldset][$field][$i][$key]['#default_value'] = $values[$i][$key]['value'] ?? '';
+        } else {
+          $form[$fieldset][$field][$i][$key]['#default_value'] = $values[$i][$key] ?? '';
+        }
       }
     }
 
@@ -314,6 +198,7 @@ class LibCalConfigForm extends ConfigFormBase
         'wrapper' => $wrapperId,
         'target' => $fieldset,
         'counter' => $counter,
+        'tab' => $tab,
       ],
     ];
     // If there is more than one name, add the remove button.
@@ -328,9 +213,37 @@ class LibCalConfigForm extends ConfigFormBase
           'wrapper' => $wrapperId,
           'target' => $fieldset,
           'counter' => $counter,
+          'tab' => $tab
         ],
       ];
     }
+  }
+
+  /**
+   * Fetch options for the select field from the endpoint.
+   *
+   * @return array
+   *   An associative array of options where keys are option values and values are option labels.
+   */
+  protected function fetchSpaceOptions()
+  {
+    $options = [];
+
+    // Make an HTTP request to the endpoint.
+    $response = \Drupal::httpClient()->get('https://libstage.lsu.edu/api/libcal/space/items/16786?pageSize=100');
+
+    if ($response->getStatusCode() == 200) {
+      $data = json_decode($response->getBody(), TRUE);
+      $data = $data['message'];
+
+      // Process the data to create options array.
+      foreach ($data as $item) {
+        // Assuming 'id' and 'name' are the fields in the response.
+        $options[$item['id']] = $item['name'];
+      }
+    }
+
+    return $options;
   }
 
   /**
@@ -341,10 +254,12 @@ class LibCalConfigForm extends ConfigFormBase
   public function addMoreCallback(array &$form, FormStateInterface $form_state)
   {
     $triggerElement = $form_state->getTriggeringElement();
-    if (empty($targetElement = $triggerElement['#ajax']['target'])) {
+    $tab = $triggerElement['#ajax']['tab'];
+    $targetElement = $triggerElement['#ajax']['target'];
+    if (empty($tab) || empty($targetElement)) {
       return [];
     }
-    return $form[$targetElement] ?? [];
+    return $form[$tab][$targetElement] ?? [];
   }
 
   /**
@@ -381,41 +296,10 @@ class LibCalConfigForm extends ConfigFormBase
     $form_state->setRebuild();
   }
 
-  private function isEmpty(string $value)
-  {
-    return empty($value);
-  }
-
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state)
-  {
-    if ($this->isEmpty($form_state->getValue('host'))) {
-      $form_state->setErrorByName('host', $this->t('This field is required.'));
-    }
-    if ($this->isEmpty($form_state->getValue('client_id'))) {
-      $form_state->setErrorByName('client_id', $this->t('This field is required.'));
-    }
-    if ($this->isEmpty($form_state->getValue('client_secret'))) {
-      $form_state->setErrorByName('client_secret', $this->t('This field is required.'));
-    }
-
-    $spaces_lids = $form_state->getValue(['location_mapping', 'spaces_lids']);
-    $hours_lids = $form_state->getValue(['location_mapping', 'hours_lids']);
-
-    $spaces_lids_list = explode(",", $spaces_lids);
-    $hours_lids_list = explode(",", $hours_lids);
-
-    if (
-      (count($spaces_lids_list) != count($hours_lids_list)) ||
-      ($this->isEmpty($spaces_lids) && !$this->isEmpty($hours_lids)) ||
-      (!$this->isEmpty($spaces_lids) && $this->isEmpty($hours_lids))
-    ) {
-      $form_state->setErrorByName('spaces_lids', $this->t('The number of Spaces location IDs do not match the number of Hours location IDs'));
-      $form_state->setErrorByName('hours_lids', $this->t('The number of Spaces location IDs do not match the number of Hours location IDs'));
-    }
-  }
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
@@ -423,50 +307,25 @@ class LibCalConfigForm extends ConfigFormBase
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
     $config = $this->config('libcal.settings');
-    $config->set('libcal.host', $form_state->getValue('host'));
-    $config->set('libcal.client_id', $form_state->getValue('client_id'));
-    $config->set('libcal.client_secret', $form_state->getValue('client_secret'));
-    $config->set('libcal.calendar_ids', $form_state->getValue('calendar_ids'));
-    $config->set('libcal.spaces_lids', $form_state->getValue(['location_mapping', 'spaces_lids']));
-    $config->set('libcal.hours_lids', $form_state->getValue(['location_mapping', 'hours_lids']));
+    $config->set('libcal.host', $form_state->getValue(['api_config_tab', 'host']));
+    $config->set('libcal.client_id', $form_state->getValue(['api_config_tab', 'client_id']));
+    $config->set('libcal.client_secret', $form_state->getValue(['api_config_tab', 'client_secret']));
+    $config->set('libcal.calendar_ids', $form_state->getValue(['api_config_tab', 'calendar_ids']));
 
     // Get the values from the form.
     foreach (['policy_statement', 'custom_footer'] as $field) {
-      $values = $form_state->getValue($field . '_fieldset');
+      $values = $form_state->getValue([$field . '_tab', $field . '_fieldset']);
 
       $data = [];
       if (isset($values[$field])) {
         foreach ($values[$field] as $item) {
-          $data[] = [
-            'category_id' => $item['category_id'] ?? '',
-            'statement' => $item['statement'] ?? '',
-          ];
+          $data[] = $item;
         }
       }
 
       // Save the data to the configuration.
       $config->set('libcal.' . $field, $data);
     }
-
-    // $num_statements = $form_state->get('num_statements');
-
-    // $category_ids = [];
-    // $policy_statements = [];
-
-    // // Collect values for each statement
-    // for ($i = 0; $i < $num_statements; $i++) {
-    //   $category_ids[] = $form_state->getValue(['policy_statements', $i, 'category_id']);
-    //   $policy_statements[] = $form_state->getValue(['policy_statements', $i, 'statement']);
-    // }
-
-    // // Prepare the mapping array for the config
-    // $policy_settings = [
-    //   'category_ids' => implode("|", $category_ids),
-    //   'statements' => implode("|", $policy_statements),
-    // ];
-
-    // // Set the updated policy_settings array back into the config
-    // $config->set('libcal.policy_statements', $policy_settings);
 
     $config->save();
     return parent::submitForm($form, $form_state);

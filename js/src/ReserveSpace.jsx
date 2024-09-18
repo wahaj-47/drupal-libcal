@@ -52,9 +52,7 @@ const ReserveSpace = () => {
   const fetchAvailibility = async () => {
     try {
       const spaceId = queryString.parse(location.search).id;
-      const buildingId = queryString.parse(location.search).buildingId;
       const data = await libcal.getAvailability(spaceId);
-      const buidlingHours = await libcal.getHours(buildingId)
       const policyStatement = await libcal.getPolicies();
       const categoryId = queryString.parse(location.search).categoryId;
 

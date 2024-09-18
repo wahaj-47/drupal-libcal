@@ -128,8 +128,11 @@ class LibCal extends ResourceBase
           // Iterate through the array of policy statements.
           foreach ($footers as $footer) {
             // Ensure both category_id and statement are set.
-            if (isset($footer['category_id']) && isset($footer['markup'])) {
-              $response[$footer['category_id']] = $footer['markup'];
+            if (isset($footer['id']) && isset($footer['markup'])) {
+              $ids = $footer['id'];
+              foreach ($ids as $id => $value) {
+                $response[$id] = ['markup' => $footer['markup']];
+              }
             }
           }
 
@@ -138,28 +141,6 @@ class LibCal extends ResourceBase
 
           // Return the response with the ModifiedResourceResponse object.
           return new ModifiedResourceResponse($res);
-
-        case 'convert':
-          $spaces_lids = $config->get('libcal.spaces_lids');
-          $hours_lids = $config->get('libcal.hours_lids');
-
-          $spaces_lids_list = explode(",", $spaces_lids);
-          $hours_lids_list = explode(",", $hours_lids);
-
-          $query_lids = $params["lids"];
-          $query_lids_list = explode(",", $query_lids);
-
-          $converted_lids = "";
-
-          foreach ($query_lids_list as $lid) {
-            $index = array_search($lid, $spaces_lids_list);
-            $converted_lids = $converted_lids . $hours_lids_list[$index] . ",";
-          }
-
-          $converted_lids = substr($converted_lids, 0, -1);
-
-          $res = ['message' => $converted_lids];
-          return (new ModifiedResourceResponse($res))->setMaxAge(0);
 
         case 'calendars':
           $response = \Drupal::httpClient()->get($config->get('libcal.host') . "/1.1/" . $resource . "/" . $config->get('libcal.calendar_ids') . $args, [

@@ -42,3 +42,16 @@ spaces:
       dist/libcal-spaces.css: {}
   js:
     dist/libcal-spaces.min.js: { minified: true }
+
+chosen:
+  version: 1.8.7
+  css:
+    theme:
+      dist/chosen/chosen.min.css: {}
+  js:
+    dist/chosen/chosen.jquery.js: {}
+    dist/chosen/init.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.once

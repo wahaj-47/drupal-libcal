@@ -53,6 +53,7 @@ const Room = ({ room, handleClick }) => {
       <div class="roomDetails">
         <p>{parse(room.description)}</p>
         <div class="roomFooter">
+          {room.footer ? parse(room.footer.markup.value) : []}
           {/* insert room directions here */}
         </div>
       </div>
@@ -162,8 +163,6 @@ const Spaces = () => {
     });
 
     lids = lids.slice(0, -1);
-    let convertedLids = await libcal.getConvertedLocationIDs(lids)
-    convertedLids = convertedLids.split(",")
 
     let zones = [{ id: "", name: "All zones" }].concat((await Promise.all(zonesPromised)).flat());
 
@@ -188,10 +187,11 @@ const Spaces = () => {
     })
 
     let itemsAtLocation = (await Promise.all(itemsPromised))
+    const footers = await libcal.getFooters();
     let items = []
     itemsAtLocation.forEach((location, index) => {
       location.forEach(item => {
-        items.push({ ...item, lid: Number(locations[index].lid), convertedLid: Number(convertedLids[index]) })
+        items.push({ ...item, footer: footers[item.id], lid: Number(locations[index].lid) })
       })
     })
 
