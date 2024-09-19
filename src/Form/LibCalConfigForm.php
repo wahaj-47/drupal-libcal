@@ -107,6 +107,15 @@ class LibCalConfigForm extends ConfigFormBase
       '#group' => 'tabs', // This groups it under the vertical tabs.
     ];
 
+    $global_footer = $config->get('libcal.global_footer') ?? [];
+    $form['custom_footer_tab']['global_footer']['markup'] = [
+      '#type' => 'text_format',
+      '#title' => t('Global Footer'),
+      '#description' => t("This footer appears below every space description"),
+      '#format' => 'full_html',
+      '#default_value' => $global_footer['markup']['value']
+    ];
+
     $custom_footers = $config->get('libcal.custom_footer') ?? [];
     $custom_footer_count = $form_state->get('custom_footer_count');
     if ($custom_footer_count === NULL) {
@@ -311,6 +320,7 @@ class LibCalConfigForm extends ConfigFormBase
     $config->set('libcal.client_id', $form_state->getValue(['api_config_tab', 'client_id']));
     $config->set('libcal.client_secret', $form_state->getValue(['api_config_tab', 'client_secret']));
     $config->set('libcal.calendar_ids', $form_state->getValue(['api_config_tab', 'calendar_ids']));
+    $config->set('libcal.global_footer', $form_state->getValue(['custom_footer_tab', 'global_footer']));
 
     // Get the values from the form.
     foreach (['policy_statement', 'custom_footer'] as $field) {

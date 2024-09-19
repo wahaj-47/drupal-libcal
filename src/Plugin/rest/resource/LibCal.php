@@ -122,8 +122,10 @@ class LibCal extends ResourceBase
         case 'footers':
           // Fetch the custom footers array from the configuration.
           $footers = $config->get('libcal.custom_footer') ?? [];
+          $global_footer = $config->get('libcal.global_footer') ?? [];
 
           $response = [];
+          $response['global'] = ['markup' => $global_footer['markup']];
 
           // Iterate through the array of policy statements.
           foreach ($footers as $footer) {

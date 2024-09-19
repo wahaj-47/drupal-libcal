@@ -53,6 +53,7 @@ const Room = ({ room, handleClick }) => {
       <div class="roomDetails">
         <p>{parse(room.description)}</p>
         <div class="roomFooter">
+          {room.globalFooter ? parse(room.globalFooter.markup.value) : []}
           {room.footer ? parse(room.footer.markup.value) : []}
           {/* insert room directions here */}
         </div>
@@ -191,7 +192,7 @@ const Spaces = () => {
     let items = []
     itemsAtLocation.forEach((location, index) => {
       location.forEach(item => {
-        items.push({ ...item, footer: footers[item.id], lid: Number(locations[index].lid) })
+        items.push({ ...item, globalFooter: footers['global'], footer: footers[item.id], lid: Number(locations[index].lid) })
       })
     })
 

@@ -108,6 +108,15 @@
 
   .roomDetails {
     font-size: 14px;
+
+    a {
+      font-weight: 700;
+      color: #3c1053;
+    }
+
+    .roomFooter {
+      margin-bottom: 1rem;
+    }
   }
 
   .roomHeader {

@@ -54,9 +54,10 @@ const ReserveSpace = () => {
       const spaceId = queryString.parse(location.search).id;
       const data = await libcal.getAvailability(spaceId);
       const policyStatement = await libcal.getPolicies();
+      const footers = await libcal.getFooters();
       const categoryId = queryString.parse(location.search).categoryId;
 
-      const room = { ...data[0], policyStatement: policyStatement[categoryId] || "" };
+      const room = { ...data[0], globalFooter: footers['global'], footer: footers[data[0].id], policyStatement: policyStatement[categoryId] || "" };
 
       const availability = room.availability;
       setRoom({
@@ -390,9 +391,12 @@ const ReserveSpace = () => {
               </div>
               <div class="roomDetails">
                 <p>{parse(room.description)}</p>
-                <p>{room.policyStatement}</p>
                 <div class="roomFooter">
+                  {room.globalFooter ? parse(room.globalFooter.markup.value) : []}
                   {/* insert room directions here */}
+                </div>
+                <div>
+                  <p>{room.policyStatement}</p>
                 </div>
               </div>
             </div>
