@@ -34,7 +34,6 @@ reserve_space:
       dist/libcal-events.css: {}
   js:
     dist/libcal-reserve.min.js: { minified: true }
-
 spaces:
   version: VERSION
   css:
@@ -51,6 +50,7 @@ chosen:
   js:
     dist/chosen/chosen.jquery.js: {}
     dist/chosen/init.js: {}
+
   dependencies:
     - core/drupal
     - core/jquery

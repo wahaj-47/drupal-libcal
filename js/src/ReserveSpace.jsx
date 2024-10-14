@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { createPortal } from "react-dom"
 
 import parse from "html-react-parser";
 
@@ -349,9 +350,10 @@ const ReserveSpace = () => {
 
   if (!room) return null;
 
+  const breadContainer = document.getElementsByClassName('breadContainer')[0]
   return (
     <>
-      <div class="bookingBreadcrumb"><Breadcrumb crumbs={generatecrumbs()}></Breadcrumb></div>
+      {createPortal(<Breadcrumb crumbs={generatecrumbs()}></Breadcrumb>, breadContainer)}
 
       <div className="d-flex flex-wrap">
         <AnimatePresence>

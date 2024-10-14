@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { createRoot } from "react-dom/client";
+import { createPortal } from "react-dom"
 
 import parse from "html-react-parser";
 
@@ -492,9 +493,10 @@ const Spaces = () => {
     ]
   }
 
+  const breadContainer = document.getElementsByClassName('breadContainer')[0]
   return (
     <div id="space-container">
-      <div class="bookingBreadcrumb"><Breadcrumb crumbs={generatecrumbs()}></Breadcrumb></div>
+      {createPortal(<Breadcrumb crumbs={generatecrumbs()}></Breadcrumb>, breadContainer)}
       <Filters
         filters={[filterByCategories, filterByZones, filterByAvailability]}
       ></Filters>
