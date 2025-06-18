@@ -5,9 +5,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = {
   entry: {
-    "libcal-events": ["./js/src/Events/EventsCalendar.jsx", "./scss/libcal-events.scss"],
-    "libcal-spaces": ["./js/src/Spaces.jsx", "./scss/libcal-spaces.scss"],
-    "libcal-reserve": ["./js/src/ReserveSpace.jsx", "./scss/libcal-reserve-spaces.scss"],
+    "libcal-spaces": ["./js/src/pages/Spaces/page.jsx", "./scss/libcal-spaces.scss"],
+    "libcal-reserve": ["./js/src/pages/ReserveSpace/page.jsx", "./scss/libcal-reserve-spaces.scss"],
   },
   devtool: isDevMode ? "source-map" : false,
   mode: isDevMode ? "development" : "production",
@@ -18,6 +17,12 @@ const config = {
     filename: "[name].min.js",
   },
   resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "js/src"),
+      "@components": path.resolve(__dirname, "js/src/components"),
+      "@utils": path.resolve(__dirname, "js/src/utils"),
+      "@services": path.resolve(__dirname, "js/src/services"),
+    },
     extensions: [".js", ".jsx"],
   },
   module: {

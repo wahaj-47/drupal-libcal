@@ -1,17 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, cloneElement, useMemo } from "react";
 
 import Slider from "react-slick";
 import moment from "moment";
+import classNames from "classnames";
 
 const daysOfTheWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const Calendar = ({
-  renderChild = () => {
-    return null;
-  },
+  children,
   onDateSelected = () => { },
-  datesToRender,
-  showDay = true,
+  dates = { start: moment().subtract(45, 'days'), end: moment().add(45, 'days') },
+  enabled = { start: moment().subtract(45, 'days'), end: moment().add(45, 'days') },
 }) => {
   const [selectedDate, setDate] = useState(moment());
   const slick = useRef(null);
@@ -48,11 +47,56 @@ const Calendar = ({
     setDate(moment(datesToRender[index]));
   };
 
+  const datesToRender = useMemo(() => {
+    const startMonth = dates.start.startOf("month");
+    const endMonth = dates.end.endOf("month");
+
+    let data = [];
+    let month = startMonth.clone();
+
+    while (month.isBefore(endMonth) || month.isSame(endMonth, "month")) {
+      const monthStart = month.startOf("month").clone();
+      const monthEnd = month.endOf("month").clone();
+
+      // Step 1: Pad the start of the month to Sunday
+      const startDay = monthStart.day(); // 0 = Sunday
+      for (let i = 0; i < startDay; i++) {
+        data.push(null);
+      }
+
+      // Step 2: Add all days in this month
+      let current = monthStart.clone();
+      while (current.isBefore(monthEnd) || current.isSame(monthEnd, "day")) {
+        data.push(current.clone());
+        current = current.add(1, "day");
+      }
+
+      // Step 3: Pad the end to Saturday
+      const endDay = monthEnd.day(); // 6 = Saturday
+      for (let i = endDay + 1; i <= 6; i++) {
+        data.push(null);
+      }
+
+      // Optional: Add a row of nulls between months (for visual gap)
+      // If you prefer no visual gap, you can skip this
+      for (let i = 0; i < 7; i++) {
+        data.push(null);
+      }
+
+      // Move to next month
+      month = month.add(1, "month");
+    }
+
+    data = _.flatten(
+      _.chunk(_.chunk(data, 7), 6).map((chunk) => _.flatten(_.zip(...chunk)))
+    );
+
+    return data;
+  }, [dates.start, dates.end]);
+
   return (
     <div className="box">
       <div className="calendar-header">
-        {/* <h1>{selectedDate.format("MMMM YYYY")}</h1> */}
-        <h1></h1>
         <div>
           <i
             role="button"
@@ -87,6 +131,14 @@ const Calendar = ({
         className="slider"
       >
         {datesToRender.map((date) => {
+
+          const dayClass = classNames(
+            {
+              'selected-day': selectedDate.isSame(date, 'day'),
+              'selected-month': selectedDate.isSame(date, 'month'),
+            }
+          )
+
           if (!moment(date).isValid())
             return <div className="day"></div>
 
@@ -96,16 +148,17 @@ const Calendar = ({
               onClick={handleDateSelection(date)}
               className="day"
             >
-              {showDay ? (
-                <div
-                  className={`${selectedDate.isSame(date, "day") ? "selected-day" : ""
-                    } ${selectedDate.isSame(date, "month") ? "selected-month" : ""
-                    } day-of-month`}
-                >
+              {children ? (
+                cloneElement(children, {
+                  date: date,
+                  selected: selectedDate.isSame(date, "day"),
+                  disabled: !enabled.start || !enabled.end || date.isBefore(enabled.start, 'day') || date.isAfter(enabled.end, 'day')
+                })
+              ) :
+                <div className={dayClass}>
                   <h1>{date.format("DD")}</h1>
                 </div>
-              ) : null}
-              {renderChild(date)}
+              }
             </div>
           )
         })}

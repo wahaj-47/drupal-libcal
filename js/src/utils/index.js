@@ -22,12 +22,6 @@ function getWindowDimensions() {
 function generateDates(today = moment(), count = 3, flatten = false) {
   let start = today.startOf('month');
 
-  // let number = count - (count % 7);
-
-  // while (start.format("dd") !== "Su") {
-  //   start.subtract(1, "day");
-  // }
-
   let dates = [];
   for (let month = 1; month <= count; month += 1) {
 

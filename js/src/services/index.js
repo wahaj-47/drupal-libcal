@@ -1,10 +1,8 @@
 import _ from "lodash";
-import { get, post } from "../helpers";
+import { get, post } from "../utils";
 import moment from "moment";
 
 const origin = window.location.origin;
-
-console.log(origin);
 
 const libcal = {
   getCalendars: async () => {
@@ -27,7 +25,7 @@ const libcal = {
   },
   getLocationIds: async () => {
     try {
-      return await get(`${origin}/api/libcal/space/locations`);
+      return await get(`${origin}/api/libcal/space/locations?details=1`);
     } catch (error) {
       throw error
     }
@@ -35,6 +33,13 @@ const libcal = {
   getCategories: async (lids) => {
     try {
       return await get(`${origin}/api/libcal/space/categories/${lids}?details=1`);
+    } catch (error) {
+      throw error
+    }
+  },
+  getCategory: async (categoryId) => {
+    try {
+      return await get(`${origin}/api/libcal/space/category/${categoryId}`)
     } catch (error) {
       throw error
     }
@@ -69,9 +74,6 @@ const libcal = {
       throw error
     }
   },
-  // getCategories: async (cids) => {
-  //   return await get(`${origin}/api/libcal/space/category/${cids}?details=1`);
-  // },
   getItems: async (lids) => {
     try {
       return await get(`${origin}/api/libcal/space/items/${lids}?availability=next&pageSize=100`)
@@ -79,10 +81,10 @@ const libcal = {
       throw error
     }
   },
-  getRoom: async (roomId) => {
+  getSpace: async (spaceId, availability = 'next') => {
     try {
       return await get(
-        `${origin}/api/libcal/space/item/${roomId}?availability=next`
+        `${origin}/api/libcal/space/item/${spaceId}?availability=${availability}`
       );
     } catch (error) {
       throw error
@@ -99,12 +101,17 @@ const libcal = {
   },
   getAvailability: async (spaceId) => {
     try {
-      // return await get(`${origin}/api/libcal/space/item/${spaceId}?availability=next`)
       return await get(`${origin}/api/libcal/space/item/${spaceId}?availability=${moment()
-        // .subtract(1, "day")
         .format("YYYY-MM-DD")},${moment()
           .add(31, "days")
           .format("YYYY-MM-DD")}`)
+    } catch (error) {
+      throw error
+    }
+  },
+  getForm: async (spaceId) => {
+    try {
+      return await get(`${origin}/api/libcal/space/form/${spaceId}`)
     } catch (error) {
       throw error
     }
@@ -122,7 +129,6 @@ const libcal = {
           },
         }
       );
-
       return response;
     } catch (error) {
       throw error
@@ -130,4 +136,4 @@ const libcal = {
   }
 };
 
-export { origin, libcal };
+export { libcal };

@@ -15,6 +15,10 @@
     font-family: "Roboto", sans-serif;
   }
 
+  .error {
+    color: #ff4040;
+  }
+
   .mapButton {
     display: flex;
     flex-direction: column;
@@ -223,6 +227,8 @@
     height: 100%;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
+    border: none;
 
     h1 {
       margin: 0;
@@ -255,6 +261,8 @@
     font-size: 16px;
     color: #3c1053;
     cursor: pointer;
+    width: 100%;
+    border: none;
 
     h4 {
       font-size: 16px;

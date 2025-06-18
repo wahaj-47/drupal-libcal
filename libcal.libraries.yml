@@ -17,15 +17,6 @@ tooltip:
         { type: external }
 
 # Block Plugins
-
-events_calendar:
-  version: VERSION
-  css:
-    theme:
-      dist/libcal-events.css: {}
-  js:
-    dist/libcal-events.min.js: { minified: true }
-
 reserve_space:
   version: VERSION
   css:

@@ -15,6 +15,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.2",
+    "classnames": "^2.5.1",
     "css-loader": "^6.7.3",
     "framer-motion": "^8.4.2",
     "html-react-parser": "^4.2.1",
@@ -27,6 +28,7 @@
     "react": "^18.2.0",
     "react-accessible-accordion": "^5.0.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.5.2",
     "react-popper-tooltip": "^4.4.2",
     "react-slick": "^0.29.0",
     "sass": "^1.57.1",
