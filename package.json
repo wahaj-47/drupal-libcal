@@ -7,30 +7,29 @@
     "build": "NODE_ENV=production webpack",
     "build:dev": "webpack",
     "start": "webpack --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tanstack/react-query": "^5.80.10",
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.2",
     "classnames": "^2.5.1",
     "css-loader": "^6.7.3",
+    "dayjs": "^1.11.13",
     "framer-motion": "^12.18.1",
     "html-react-parser": "^5.2.5",
     "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.7.2",
-    "moment": "^2.29.4",
-    "node-sass": "^8.0.0",
     "postcss-loader": "^7.0.2",
     "query-string": "^8.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.5.2",
-    "react-popper-tooltip": "^4.4.2",
     "react-slick": "^0.30.3",
-    "sass": "^1.57.1",
+    "sass": "^1.89.2",
     "sass-loader": "^13.2.0"
   },
   "devDependencies": {
@@ -42,6 +41,7 @@
     "jest": "^30.0.1",
     "react-test-renderer": "^19.1.0",
     "webpack": "^5.75.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.0.1"
   }
 }

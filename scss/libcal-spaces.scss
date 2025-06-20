@@ -1,4 +1,4 @@
-@import "./config/variables.scss";
+@use "config/variables.scss";
 
 //begin new styles
 .mapModal {
@@ -267,7 +267,7 @@
   }
 
   h4 {
-    color: $accent-light;
+    color: variables.$accent-light;
     font-size: large;
   }
 

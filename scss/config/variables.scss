@@ -1,4 +1,5 @@
+@use "sass:color";
 $lsupurple: #461d7c;
 
 $accent-shade: #232323;
-$accent-light: lighten($accent-shade, 37%);
+$accent-light: color.adjust($accent-shade, $lightness: 37%);

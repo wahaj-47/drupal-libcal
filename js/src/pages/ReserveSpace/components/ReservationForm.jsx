@@ -6,6 +6,7 @@ import TextInput from '../../../components/Input/TextInput';
 import Dropdown from "../../../components/Input/Dropdown";
 import Checkbox from "../../../components/Input/Checkbox";
 import Radio from "../../../components/Input/Radio";
+import { isEmpty, xor } from 'lodash';
 
 const ReservationForm = ({ form, handleSubmit }) => {
 
@@ -40,9 +41,7 @@ const ReservationForm = ({ form, handleSubmit }) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log("Outside", isFormValid())
         if (isFormValid()) {
-            console.log("Inside", isFormValid())
             handleSubmit(formState);
         }
     }
@@ -60,7 +59,7 @@ const ReservationForm = ({ form, handleSubmit }) => {
                     throw { key, message: "Please use your LSU email" };
                 }
 
-                if (field.type === 'checkbox' && field.required && _.isEmpty(formState[key])) {
+                if (field.type === 'checkbox' && field.required && isEmpty(formState[key])) {
                     throw { key, message: "Please select at least one of these options" };
                 }
             }
@@ -145,7 +144,7 @@ const ReservationForm = ({ form, handleSubmit }) => {
                                             label={option}
                                             value={option}
                                             checked={formState[key].includes(option)}
-                                            onChange={(checked) => { setFormValue(key)(_.xor(formState[key], [option])) }}
+                                            onChange={(checked) => { setFormValue(key)(xor(formState[key], [option])) }}
                                             inline
                                         >
                                         </Checkbox>)}

@@ -2,15 +2,8 @@
 
 namespace Drupal\libcal\Plugin\rest\resource;
 
-use Drupal\Component\Plugin\DependentPluginInterface;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Routing\BcRoute;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -35,7 +28,7 @@ use GuzzleHttp\Exception\RequestException;
  * For accessing Drupal entities through REST interface use
  * \Drupal\rest\Plugin\rest\resource\EntityResource plugin.
  */
-class LibCal extends ResourceBase
+class LibCalOld extends ResourceBase
 {
 
   private function getQueryParams($params)

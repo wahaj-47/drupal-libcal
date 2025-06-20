@@ -1,4 +1,4 @@
-@import "./config/variables.scss";
+@use "config/variables.scss";
 
 #reserve-space {
 
@@ -276,7 +276,7 @@
     color: white;
 
     h4 {
-      color: $lsupurple;
+      color: variables.$lsupurple;
     }
   }
 
@@ -297,7 +297,7 @@
     }
 
     .selected {
-      border: 2px solid $lsupurple;
+      border: 2px solid variables.$lsupurple;
     }
   }
 

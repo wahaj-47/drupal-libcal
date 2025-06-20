@@ -1,18 +1,19 @@
 import React, { useState, useRef, cloneElement, useMemo } from "react";
 
 import Slider from "react-slick";
-import moment from "moment";
 import classNames from "classnames";
+import dayjs from "dayjs";
+import { chunk, flatten, zip } from "lodash";
 
 const daysOfTheWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const Calendar = ({
   children,
   onDateSelected = () => { },
-  dates = { start: moment().subtract(45, 'days'), end: moment().add(45, 'days') },
-  enabled = { start: moment().subtract(45, 'days'), end: moment().add(45, 'days') },
+  dates = { start: dayjs().subtract(45, 'days'), end: dayjs().add(45, 'days') },
+  enabled = { start: dayjs().subtract(45, 'days'), end: dayjs().add(45, 'days') },
 }) => {
-  const [selectedDate, setDate] = useState(moment());
+  const [selectedDate, setDate] = useState(dayjs());
   const slick = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -40,11 +41,11 @@ const Calendar = ({
 
     let nextSlide = slideIndex
     let index = nextSlide * 6;
-    while (!moment(datesToRender[index]).isValid()) {
+    while (!dayjs(datesToRender[index]).isValid()) {
       nextSlide += 1
       index = nextSlide * 6;
     }
-    setDate(moment(datesToRender[index]));
+    setDate(dayjs(datesToRender[index]));
   };
 
   const datesToRender = useMemo(() => {
@@ -58,37 +59,27 @@ const Calendar = ({
       const monthStart = month.startOf("month").clone();
       const monthEnd = month.endOf("month").clone();
 
-      // Step 1: Pad the start of the month to Sunday
       const startDay = monthStart.day(); // 0 = Sunday
       for (let i = 0; i < startDay; i++) {
         data.push(null);
       }
 
-      // Step 2: Add all days in this month
       let current = monthStart.clone();
       while (current.isBefore(monthEnd) || current.isSame(monthEnd, "day")) {
         data.push(current.clone());
         current = current.add(1, "day");
       }
 
-      // Step 3: Pad the end to Saturday
       const endDay = monthEnd.day(); // 6 = Saturday
       for (let i = endDay + 1; i <= 6; i++) {
         data.push(null);
       }
 
-      // Optional: Add a row of nulls between months (for visual gap)
-      // If you prefer no visual gap, you can skip this
-      for (let i = 0; i < 7; i++) {
-        data.push(null);
-      }
-
-      // Move to next month
       month = month.add(1, "month");
     }
 
-    data = _.flatten(
-      _.chunk(_.chunk(data, 7), 6).map((chunk) => _.flatten(_.zip(...chunk)))
+    data = flatten(
+      chunk(chunk(data, 7), 6).map((chunk) => flatten(zip(...chunk)))
     );
 
     return data;
@@ -139,7 +130,7 @@ const Calendar = ({
             }
           )
 
-          if (!moment(date).isValid())
+          if (!dayjs(date).isValid())
             return <div className="day"></div>
 
           return (

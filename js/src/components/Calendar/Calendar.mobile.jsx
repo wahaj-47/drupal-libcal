@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import Slider from "react-slick";
-import moment from "moment";
+import dayjs from "dayjs";
 
 const Calendar = ({ renderDots, renderChild, datesToRender }) => {
   const [datesInState, setDatesInState] = useState([])
-  const [selectedDate, setDate] = useState(moment());
+  const [selectedDate, setDate] = useState(dayjs());
   const slick = useRef(null);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
 
   useEffect(() => {
     if (datesInState) {
-      const todaysIndex = datesInState.findIndex(date => moment().isSame(moment(date), 'date'))
+      const todaysIndex = datesInState.findIndex(date => dayjs().isSame(dayjs(date), 'date'))
       if (todaysIndex != -1)
         slick.current.slickGoTo(todaysIndex);
     }
@@ -43,7 +43,7 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
   };
 
   const updateHeader = (index) => {
-    setDate(moment(datesInState[index]));
+    setDate(dayjs(datesInState[index]));
   };
 
   return (
@@ -73,7 +73,7 @@ const Calendar = ({ renderDots, renderChild, datesToRender }) => {
         afterChange={updateHeader}
       >
         {datesInState.map((date) => {
-          if (moment(date).isValid())
+          if (dayjs(date).isValid())
             return (
               <div
                 key={date.format("mmDDyyyy")}

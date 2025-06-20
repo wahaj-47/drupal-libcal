@@ -2,14 +2,15 @@ const path = require("path");
 const isDevMode = false;
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const config = {
+  mode: isDevMode ? "development" : "production",
+  devtool: isDevMode ? "source-map" : false,
   entry: {
     "libcal-spaces": ["./js/src/pages/Spaces/page.jsx", "./scss/libcal-spaces.scss"],
     "libcal-reserve": ["./js/src/pages/ReserveSpace/page.jsx", "./scss/libcal-reserve-spaces.scss"],
   },
-  devtool: isDevMode ? "source-map" : false,
-  mode: isDevMode ? "development" : "production",
   output: {
     path: isDevMode
       ? path.resolve(__dirname, "dist_dev")
@@ -56,13 +57,16 @@ const config = {
             loader: "sass-loader",
             options: {
               sourceMap: true,
+              api: "modern"
             },
           },
         ],
       },
     ],
   },
-  plugins: [new MiniCssExtractPlugin()],
+  plugins: [
+    new MiniCssExtractPlugin(),
+  ],
 };
 
 module.exports = config;
