@@ -9,13 +9,6 @@ slick:
       https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css:
         { type: external, minified: true }
 
-tooltip:
-  version: 4.4.2
-  css:
-    theme:
-      https://cdn.skypack.dev/react-popper-tooltip@4.4.2/dist/styles.css:
-        { type: external }
-
 # Block Plugins
 reserve_space:
   version: VERSION
