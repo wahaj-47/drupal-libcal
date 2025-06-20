@@ -75,6 +75,10 @@ const Calendar = ({
         data.push(null);
       }
 
+      for (let i = 0; i < 7; i++) {
+        data.push(null);
+      }
+
       month = month.add(1, "month");
     }
 
