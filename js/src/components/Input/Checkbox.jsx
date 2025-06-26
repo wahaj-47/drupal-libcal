@@ -8,8 +8,8 @@ const Checkbox = forwardRef(({ id, className, label, labelClassName, value, chec
 
     return (
         <div className={containerClass}>
-            <input id={id} type="checkbox" className={checkboxClass} value={value} checked={checked} onChange={(e) => { onChange(e.target.value) }} ref={ref} required={required}></input>
-            <label for={id} className={labelClass}>{label}</label>
+            <input id={id} type="checkbox" className={checkboxClass} value={value} checked={checked} onChange={(e) => { onChange?.(e.target.value) }} ref={ref} required={required}></input>
+            <label htmlFor={id} className={labelClass}>{label}</label>
         </div>
     )
 })

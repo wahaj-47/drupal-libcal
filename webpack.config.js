@@ -8,8 +8,17 @@ const config = {
   mode: isDevMode ? "development" : "production",
   devtool: isDevMode ? "source-map" : false,
   entry: {
-    "libcal-spaces": ["./js/src/pages/Spaces/page.jsx", "./scss/libcal-spaces.scss"],
-    "libcal-reserve": ["./js/src/pages/ReserveSpace/page.jsx", "./scss/libcal-reserve-spaces.scss"],
+    "libcal-spaces": [
+      "./js/src/pages/Spaces/page.jsx",
+      "./scss/libcal-spaces.scss"
+    ],
+    "libcal-reserve": [
+      "./js/src/pages/ReserveSpace/page.jsx",
+      "./js/src/components/Calendar/Calendar.jsx",
+      "./scss/libcal-reserve-spaces.scss",
+      "./scss/calendar.scss",
+      "./scss/day.scss"
+    ],
   },
   output: {
     path: isDevMode

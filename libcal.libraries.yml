@@ -15,7 +15,6 @@ reserve_space:
   css:
     theme:
       dist/libcal-reserve.css: {}
-      dist/libcal-events.css: {}
   js:
     dist/libcal-reserve.min.js: { minified: true }
 spaces:

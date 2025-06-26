@@ -20,8 +20,6 @@ const proxy = {
 }
 
 const libcal = {
-  getPolicies: () => client.get(`/api/libcal/statements`),
-  getFooters: () => client.get(`/api/libcal/footers`),
   getCsrfToken: async () => client.get(`/session/token`),
 
   // Proxy endpoints

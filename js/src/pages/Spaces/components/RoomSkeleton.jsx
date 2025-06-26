@@ -10,31 +10,29 @@ const RoomSkeleton = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             >
-                <div class="roomHeader pointer">
-                    <div class="roomImage">
-                        <div class="roomImageSkeleton"></div>
+                <div class="room-header pointer">
+                    <div class="room-image">
+                        <div class="room-image-skeleton"></div>
                     </div>
-                    <div class="roomLabel">
+                    <div class="room-label">
                         <h3>
-                            <div class="roomNameSkeleton"></div>
+                            <div class="room-name-skeleton"></div>
                         </h3>
-                        <span class="roomZone">
-                            <div class="roomZoneSkeleton"></div>
+                        <span class="room-zone">
+                            <div class="room-zone-skeleton"></div>
                         </span>
                         <span className="available">
                         </span>
                     </div>
                 </div>
             </motion.a>
-            <div class="roomDetails">
+            <div class="room-details">
                 <p>
-                    <div class="roomDetailsSkeleton"></div>
+                    <div class="room-details-skeleton"></div>
+                    <div class="room-details-skeleton"></div>
+                    <div class="room-details-skeleton"></div>
+                    <div class="room-details-skeleton"></div>
                 </p>
-                <div class="roomFooter">
-                    <div class="roomFooterSkeleton"></div>
-                    <div class="roomFooterSkeleton"></div>
-                    <div class="roomFooterSkeleton"></div>
-                </div>
             </div>
         </div>
     )

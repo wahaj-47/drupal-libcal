@@ -12,7 +12,7 @@ import Breadcrumb from "@components/Breadcrumb/Breadcrumb";
 import RoomSkeleton from "./components/RoomSkeleton";
 import Room from "./components/Room";
 import Dropdown from "../../components/Input/Dropdown";
-import { useCategories, useFooters, useItems, useLocations, useZones } from "../../hooks/libcal";
+import { useCategories, useItems, useLocations, useZones } from "../../hooks/libcal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const skeletons = Array.from({ length: 6 }, (_, index) => <RoomSkeleton key={index} />)
@@ -77,7 +77,7 @@ const Spaces = () => {
       <div id="filters">
         <AnimatePresence>
           {isEmpty(categories) || cPending || isEmpty(zones) || zPending ? [] :
-            <motion.div class="selectContainer"
+            <motion.div className="select-container"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -135,7 +135,7 @@ const Spaces = () => {
         </AnimatePresence>
       </div>
 
-      <div id="rooms" className="space-column">
+      <div id="rooms">
         <AnimatePresence>
           {
             isEmpty(items) || iPending ?

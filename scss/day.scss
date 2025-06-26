@@ -1,0 +1,58 @@
+@import "./config/variables.scss";
+
+.day {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-collapse: collapse;
+    cursor: pointer;
+    flex-direction: column;
+
+    .day-of-month {
+        margin-bottom: 5px;
+        padding: 3px;
+    }
+
+    h1 {
+        color: black;
+        display: inline;
+    }
+
+    h1:first-of-type {
+        font-size: 16px !important;
+    }
+
+    &.selected {
+        background-color: $lsupurple;
+        width: fit-content;
+
+        h1 {
+            color: white;
+        }
+    }
+
+    &.disabled,
+    &.invalid {
+        cursor: grab;
+
+        * {
+            color: lightgray;
+        }
+
+    }
+
+    &.disabled:active,
+    &.invalid:active {
+        cursor: grabbing;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .day {
+        h1:first-of-type {
+            font-size: 12px !important;
+        }
+    }
+}

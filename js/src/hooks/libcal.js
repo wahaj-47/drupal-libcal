@@ -20,12 +20,6 @@ const keys = {
     form: (fid) => ["libcal", "form", fid],
 };
 
-export const usePolicies = () =>
-    useQuery({ queryKey: keys.policies, queryFn: libcal.getPolicies });
-
-export const useFooters = () =>
-    useQuery({ queryKey: keys.footers, queryFn: libcal.getFooters });
-
 export const useLocations = () =>
     useQuery({ queryKey: keys.locations, queryFn: libcal.getLocations });
 

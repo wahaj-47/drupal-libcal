@@ -5,7 +5,7 @@ import { createPortal } from "react-dom"
 import parse from "html-react-parser";
 import queryString from "query-string";
 
-import Calendar from "@components/Calendar/Calendar.desktop";
+import Calendar from "@components/Calendar/Calendar";
 import Breadcrumb from "@components/Breadcrumb/Breadcrumb";
 
 import Day from "./components/Day";
@@ -179,30 +179,28 @@ const ReserveSpace = () => {
             <Calendar
               onDateSelected={handleDateSelection}
               dates={{ start: dayjs(), end: dayjs().add(3, 'months') }}
-              enabled={
-                {
-                  start: "availability" in room ? room.availability[0].from : null,
-                  end: "availability" in room ? room.availability[room.availability.length - 1].to : null
-                }
-              }
+              enabled={{
+                start: "availability" in room ? room.availability[0].from : null,
+                end: "availability" in room ? room.availability[room.availability.length - 1].to : null
+              }}
+              components={{ Day }}
             >
-              <Day></Day>
             </Calendar>
           </motion.div>
         </AnimatePresence>
         <div class="column blurredElement">
           <div className="box">
-            <div class="roomBox">
-              <div class="roomHeader d-flex">
-                <div class="roomImage">
+            <div class="room-box">
+              <div class="room-header d-flex">
+                <div class="room-image">
                   {room.image ? <a href={room.image} data-lightbox="room-image"><img src={room.image} className="preview-img"></img></a> : null}
                 </div>
-                <div class="roomLabel">
+                <div class="room-label">
                   <h3>{room.name}</h3>
-                  <div class="roomDate"><span class="selectedLabel">Selected date</span><span class="selectedDate">{selectedDate.format("dddd, MMMM Do YYYY")}</span></div>
+                  <div class="room-date"><span class="selected-label">Selected date</span><span class="selected-date">{selectedDate.format("dddd, MMMM D YYYY")}</span></div>
                 </div>
               </div>
-              <div class="roomDetails">
+              <div class="room-details">
                 {room.description && parse(room.description)}
                 {cDescription && parse(cDescription)}
                 {lDescription && parse(lDescription)}
@@ -219,7 +217,7 @@ const ReserveSpace = () => {
                   exit={{ opacity: 0, translateY: -200 }}
                   layout
                 >
-                  <span class="slotPrompt">Select up to {Math.min(slots.length, 6)} slots</span>
+                  <span class="slot-prompt">Select up to {Math.min(slots.length, 6)} slots</span>
                   <div className="slot-list">
                     {slots.length > 0 ?
                       slots.map(slot => (
@@ -272,7 +270,7 @@ const ReserveSpace = () => {
             </AnimatePresence>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };

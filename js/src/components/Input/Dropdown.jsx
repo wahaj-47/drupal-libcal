@@ -6,10 +6,10 @@ const Dropdown = forwardRef(({ id, className, label, value, onChange, required, 
 
     return (
         <div className={containerClass}>
-            <select className='form-select' id={id} aria-label={label} value={value} onChange={(e) => { onChange(e.target.value) }} required={required} ref={ref}>
+            <select className='form-select' id={id} aria-label={label} value={value} onChange={(e) => { onChange?.(e.target.value) }} required={required} ref={ref}>
                 {children}
             </select>
-            <label for={id}>{label}</label>
+            <label htmlFor={id}>{label}</label>
         </div>
     )
 })

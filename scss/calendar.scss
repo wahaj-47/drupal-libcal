@@ -1,0 +1,62 @@
+@import "./config/variables.scss";
+
+.box {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin: 0 auto;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+
+    h1 {
+        font-size: 20px !important;
+    }
+
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 16px;
+
+        margin-bottom: 12px i {
+            cursor: pointer;
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+
+            h1 {
+                margin: 0 10px !important;
+                margin-bottom: 0 !important;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+#week-header {
+    display: flex;
+    padding: 0;
+
+    .day-letter {
+        flex: 1;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+
+        h1 {
+            margin: 0;
+            padding: 5px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .box {
+        h1 {
+            font-size: 16px !important;
+        }
+    }
+}

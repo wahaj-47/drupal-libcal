@@ -8,10 +8,15 @@ const TextArea = forwardRef(({ id, placeholder, className, label, value, onChang
         <div className="form-floating">
             <textarea
                 ref={ref}
-                id={id} className={inputClass} placeholder={placeholder} value={value} onChange={(e) => { onChange(e.target.value) }} required={required}
+                id={id}
+                className={inputClass}
+                placeholder={placeholder}
+                value={value}
+                onChange={(e) => { onChange?.(e.target.value) }}
+                required={required}
                 style={{ minHeight: 120 + "px" }}>
             </textarea>
-            <label for={id} className="form-label">{label}</label>
+            <label htmlFor={id} className="form-label">{label}</label>
         </div >
     )
 })

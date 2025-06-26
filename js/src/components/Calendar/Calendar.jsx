@@ -1,18 +1,19 @@
-import React, { useState, useRef, cloneElement, useMemo } from "react";
+import React, { useState, useRef, useMemo } from "react";
 
 import Slider from "react-slick";
-import classNames from "classnames";
+import Day from "./Day";
 import dayjs from "dayjs";
 import { chunk, flatten, zip } from "lodash";
 
 const daysOfTheWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const Calendar = ({
-  children,
   onDateSelected = () => { },
   dates = { start: dayjs().subtract(45, 'days'), end: dayjs().add(45, 'days') },
   enabled = { start: dayjs().subtract(45, 'days'), end: dayjs().add(45, 'days') },
+  components = { Day: Day }
 }) => {
+  const { Day } = components;
   const [selectedDate, setDate] = useState(dayjs());
   const slick = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,7 +37,6 @@ const Calendar = ({
   };
 
   const updateHeader = (slideIndex) => {
-
     setCurrentIndex(slideIndex)
 
     let nextSlide = slideIndex
@@ -108,7 +108,7 @@ const Calendar = ({
       </div>
       <div id="week-header">
         {daysOfTheWeek.map((day) => (
-          <div className="dayLetter">
+          <div className="day-letter">
             <h1>{day}</h1>
           </div>
         ))}
@@ -127,34 +127,20 @@ const Calendar = ({
       >
         {datesToRender.map((date) => {
 
-          const dayClass = classNames(
-            {
-              'selected-day': selectedDate.isSame(date, 'day'),
-              'selected-month': selectedDate.isSame(date, 'month'),
-            }
-          )
-
           if (!dayjs(date).isValid())
-            return <div className="day"></div>
+            return <div className="day invalid"></div>
+
+          const disabled = !enabled.start || !enabled.end || date.isBefore(enabled.start, 'day') || date.isAfter(enabled.end, 'day');
 
           return (
-            <div
+            <Day
               key={date.format("mmDDyyyy")}
-              onClick={handleDateSelection(date)}
-              className="day"
+              date={date}
+              selected={selectedDate.isSame(date, "day")}
+              disabled={disabled}
+              handleClick={!disabled ? handleDateSelection(date) : undefined}
             >
-              {children ? (
-                cloneElement(children, {
-                  date: date,
-                  selected: selectedDate.isSame(date, "day"),
-                  disabled: !enabled.start || !enabled.end || date.isBefore(enabled.start, 'day') || date.isAfter(enabled.end, 'day')
-                })
-              ) :
-                <div className={dayClass}>
-                  <h1>{date.format("DD")}</h1>
-                </div>
-              }
-            </div>
+            </Day>
           )
         })}
       </Slider>

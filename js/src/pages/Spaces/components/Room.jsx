@@ -17,13 +17,13 @@ const Room = ({ location, category, room }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 href={`${origin}/spaces/booking/reserve?id=${id}&category=${groupName}&categoryId=${groupId}&locationId=${lid}`}>
-                <div class="roomHeader pointer">
-                    <div class="roomImage">
+                <div class="room-header pointer">
+                    <div class="room-image">
                         {image && <img src={image} className="preview-img"></img>}
                     </div>
-                    <div class="roomLabel">
+                    <div class="room-label">
                         <h3>{name}</h3>
-                        <span class="roomZone">{zoneName}</span>
+                        <span class="room-zone">{zoneName}</span>
                         {availability === 'checking' && <span>Checking availability...</span>}
                         {availability === "now" && <span className="available">Available Now</span>}
                         {availability === "soon" && <span>Available in {availableIn}</span>}
@@ -31,11 +31,10 @@ const Room = ({ location, category, room }) => {
                     </div>
                 </div>
             </motion.a>
-            <div class="roomDetails">
+            <div class="room-details">
                 {description && parse(description)}
                 {cDescription && parse(cDescription)}
                 {lDescription && parse(lDescription)}
-                {/* insert room directions here */}
             </div>
         </div>
     );

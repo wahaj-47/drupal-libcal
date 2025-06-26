@@ -8,8 +8,8 @@ const Radio = forwardRef(({ id, name, className, label, labelClassName, value, c
 
     return (
         <div className={containerClass}>
-            <input id={id} name={name} type="radio" className={checkboxClass} value={value} checked={checked} onChange={(e) => { onChange(e.target.value) }} ref={ref} required={required}></input>
-            <label for={id} className={labelClass}>{label}</label>
+            <input id={id} name={name} type="radio" className={checkboxClass} value={value} checked={checked} onChange={(e) => { onChange?.(e.target.value) }} ref={ref} required={required}></input>
+            <label htmlFor={id} className={labelClass}>{label}</label>
         </div>
     )
 })
