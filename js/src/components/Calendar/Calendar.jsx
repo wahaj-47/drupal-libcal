@@ -108,7 +108,7 @@ const Calendar = ({
       </div>
       <div id="week-header">
         {daysOfTheWeek.map((day) => (
-          <div className="day-letter">
+          <div key={day} className="day-letter">
             <h1>{day}</h1>
           </div>
         ))}
@@ -125,16 +125,16 @@ const Calendar = ({
         afterChange={updateHeader}
         className="slider"
       >
-        {datesToRender.map((date) => {
+        {datesToRender.map((date, index) => {
 
           if (!dayjs(date).isValid())
-            return <div className="day invalid"></div>
+            return <div key={index} className="day invalid"></div>
 
           const disabled = !enabled.start || !enabled.end || date.isBefore(enabled.start, 'day') || date.isAfter(enabled.end, 'day');
 
           return (
             <Day
-              key={date.format("mmDDyyyy")}
+              key={date.format("MMDDYYYY")}
               date={date}
               selected={selectedDate.isSame(date, "day")}
               disabled={disabled}

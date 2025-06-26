@@ -14,7 +14,7 @@ describe('Day component', () => {
     test('applies selected-day class when selected is true', () => {
         render(<Day date={mockDate} selected />);
         const day = screen.getByRole('button');
-        expect(day).toHaveClass('selected-day');
+        expect(day).toHaveClass('selected');
     });
 
     test('applies disabled class when disabled is true', () => {
