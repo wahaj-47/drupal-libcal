@@ -75,7 +75,9 @@ const Calendar = ({
         data.push(null);
       }
 
-      for (let i = 0; i < 7; i++) {
+      const total = 6 + startDay - endDay + month.daysInMonth();
+
+      for (let i = 0; i < 42 - total; i++) {
         data.push(null);
       }
 
