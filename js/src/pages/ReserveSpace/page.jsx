@@ -179,11 +179,12 @@ const ReserveSpace = () => {
             <Calendar
               onDateSelected={handleDateSelection}
               dates={{ start: dayjs(), end: dayjs().add(3, 'months') }}
-              enabled={{
-                start: "availability" in room ? room.availability[0].from : null,
-                end: "availability" in room ? room.availability[room.availability.length - 1].to : null
-              }}
-              components={{ Day }}
+              enabled={
+                {
+                  start: "availability" in room && room.availability.length > 0 ? room.availability[0].from : null,
+                  end: "availability" in room && room.availability.length > 0 ? room.availability[room.availability.length - 1].to : null
+                }
+              }
             >
             </Calendar>
           </motion.div>
