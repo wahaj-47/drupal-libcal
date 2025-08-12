@@ -185,6 +185,7 @@ const ReserveSpace = () => {
                   end: "availability" in room && room.availability.length > 0 ? room.availability[room.availability.length - 1].to : null
                 }
               }
+              components={{ Day }}
             >
             </Calendar>
           </motion.div>
