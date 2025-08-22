@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { createRoot } from "react-dom/client";
 import { createPortal } from "react-dom"
 
@@ -22,7 +22,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
 
-import { xor } from "lodash";
+import { capitalize, xor } from "lodash";
 import { useCategory, useForm, useLocations, useReserve, useSpace } from "../../hooks/libcal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -34,9 +34,15 @@ const lid = queryString.parse(location.search).locationId;
 const from = dayjs().format('YYYY-MM-DD');
 const to = dayjs().add(31, 'days').format('YYYY-MM-DD');
 
+const stripHTML = (html) => {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
+
 const ReserveSpace = () => {
 
-  const { data: locations = [], pending: lPending } = useLocations();
+  const { data: locations = [] } = useLocations();
   const location = locations.find(location => location.lid === Number(lid));
   const { data: category } = useCategory(cid);
   const { data: space } = useSpace(sid, `${from},${to}`);
@@ -113,7 +119,11 @@ const ReserveSpace = () => {
       {
         loading: 'Just a second...',
         success: `Space reserved.\n A confirmation email has been sent to ${data.email}`,
-        error: "Uh-oh! Something went wrong"
+        error: (error) => {
+          const { response: { data } } = error;
+          if (data) return capitalize(stripHTML(data))
+          return `Uh-oh! Something went wrong`
+        }
       })
   };
 
