@@ -121,7 +121,12 @@ const ReserveSpace = () => {
         success: `Space reserved.\n A confirmation email has been sent to ${data.email}`,
         error: (error) => {
           const { response: { data } } = error;
-          if (data) return capitalize(stripHTML(data))
+          if (data) {
+            const message = stripHTML(data);
+            const pattern = /(from|to|start|end).*(not a valid.*slot)/i;
+            if (pattern.test(message)) return "The selected slot has been booked already. Try a different slot."
+            return capitalize(message)
+          }
           return `Uh-oh! Something went wrong`
         }
       })
