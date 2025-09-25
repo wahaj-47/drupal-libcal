@@ -26,7 +26,7 @@ const Room = ({ location, category, room }) => {
                         <span class="room-zone">{zoneName}</span>
                         {availability === 'checking' && <span>Checking availability...</span>}
                         {availability === "now" && <span className="available">Available Now</span>}
-                        {availability === "soon" && <span>Available in {availableIn}</span>}
+                        {availability === "soon" && <span>Available {availableIn}</span>}
                         {availability === "unavailable" && <span>Unavailable</span>}
                     </div>
                 </div>
