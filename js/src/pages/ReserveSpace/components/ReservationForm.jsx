@@ -104,7 +104,7 @@ const ReservationForm = ({ form, handleSubmit }) => {
         >
             <form onSubmit={onSubmit}>
                 {Object.entries(fields).map(([key, field]) =>
-                    <div key={key} class="row g-2 m-1">
+                    <div key={key} className="row g-2 m-1">
                         {field.type === "string" &&
                             <TextInput
                                 type="text"
@@ -180,7 +180,7 @@ const ReservationForm = ({ form, handleSubmit }) => {
                         className="ms-auto btn btn-outline-primary px-4"
                         type="submit"
                     >
-                        Submit <i class="fas fa-chevron-right"></i>
+                        Submit <i className="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </form>

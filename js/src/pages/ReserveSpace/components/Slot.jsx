@@ -14,7 +14,7 @@ const Slot = ({ id, label, selected, isValid, handleSelect }) => {
             className={slotClass}
             onClick={handleSelect(id)}
         >
-            <span class="slot-time">
+            <span className="slot-time">
                 {label}
             </span>
         </button>

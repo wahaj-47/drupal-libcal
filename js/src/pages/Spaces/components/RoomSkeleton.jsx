@@ -4,34 +4,35 @@ import { motion } from "framer-motion";
 const RoomSkeleton = () => {
     return (
         <div
-            class="space-room">
+            className="space-room">
             <motion.a
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
             >
-                <div class="room-header pointer">
-                    <div class="room-image">
-                        <div class="room-image-skeleton"></div>
+                <div className="room-header pointer">
+                    <div className="room-image">
+                        <span className="sr-only">Loading room name</span>
+                        <div className="room-image-skeleton"></div>
                     </div>
-                    <div class="room-label">
+                    <div className="room-label">
                         <h3>
-                            <div class="room-name-skeleton"></div>
+                            <div className="room-name-skeleton"></div>
                         </h3>
-                        <span class="room-zone">
-                            <div class="room-zone-skeleton"></div>
+                        <span className="room-zone">
+                            <div className="room-zone-skeleton"></div>
                         </span>
                         <span className="available">
                         </span>
                     </div>
                 </div>
             </motion.a>
-            <div class="room-details">
+            <div className="room-details">
                 <p>
-                    <div class="room-details-skeleton"></div>
-                    <div class="room-details-skeleton"></div>
-                    <div class="room-details-skeleton"></div>
-                    <div class="room-details-skeleton"></div>
+                    <div className="room-details-skeleton"></div>
+                    <div className="room-details-skeleton"></div>
+                    <div className="room-details-skeleton"></div>
+                    <div className="room-details-skeleton"></div>
                 </p>
             </div>
         </div>

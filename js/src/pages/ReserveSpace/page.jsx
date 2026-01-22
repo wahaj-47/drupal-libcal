@@ -205,19 +205,19 @@ const ReserveSpace = () => {
             </Calendar>
           </motion.div>
         </AnimatePresence>
-        <div class="column blurredElement">
+        <div className="column blurredElement">
           <div className="box">
-            <div class="room-box">
-              <div class="room-header d-flex">
-                <div class="room-image">
+            <div className="room-box">
+              <div className="room-header d-flex">
+                <div className="room-image">
                   {room.image ? <a href={room.image} data-lightbox="room-image"><img src={room.image} className="preview-img"></img></a> : null}
                 </div>
-                <div class="room-label">
+                <div className="room-label">
                   <h3>{room.name}</h3>
-                  <div class="room-date"><span class="selected-label">Selected date</span><span class="selected-date">{selectedDate.format("dddd, MMMM D YYYY")}</span></div>
+                  <div className="room-date"><span className="selected-label">Selected date</span><span className="selected-date">{selectedDate.format("dddd, MMMM D YYYY")}</span></div>
                 </div>
               </div>
-              <div class="room-details">
+              <div className="room-details">
                 {room.description && parse(room.description)}
                 {cDescription && parse(cDescription)}
                 {lDescription && parse(lDescription)}
@@ -234,7 +234,7 @@ const ReserveSpace = () => {
                   exit={{ opacity: 0, translateY: -200 }}
                   layout
                 >
-                  <span class="slot-prompt">Select up to {Math.min(slots.length, 6)} slots</span>
+                  <span className="slot-prompt">Select up to {Math.min(slots.length, 6)} slots</span>
                   <div className="slot-list">
                     {slots.length > 0 ?
                       slots.map(slot => (
@@ -266,7 +266,7 @@ const ReserveSpace = () => {
                       disabled={selectedSlots.length < 1}
                       className="ms-auto btn btn-outline-primary px-4"
                     >
-                      Next <i class="fas fa-chevron-right"></i>
+                      Next <i className="fas fa-chevron-right"></i>
                     </button>
                   </div>
                 </motion.div>
@@ -278,7 +278,7 @@ const ReserveSpace = () => {
                       setHasSelectedSlots(false);
                     }}
                   >
-                    <i class="fas fa-chevron-left"></i> Back
+                    <i className="fas fa-chevron-left"></i> Back
                   </button>
                   <h4>Confirm reservation</h4>
                   <ReservationForm form={form} handleSubmit={handleSubmit}></ReservationForm>

@@ -11,19 +11,19 @@ const Room = ({ location, category, room }) => {
 
     return (
         <div
-            class="space-room">
+            className="space-room">
             <motion.a
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 href={`${origin}/spaces/booking/reserve?id=${id}&category=${groupName}&categoryId=${groupId}&locationId=${lid}`}>
-                <div class="room-header pointer">
-                    <div class="room-image">
+                <div className="room-header pointer">
+                    <div className="room-image">
                         {image && <img src={image} className="preview-img"></img>}
                     </div>
-                    <div class="room-label">
+                    <div className="room-label">
                         <h3>{name}</h3>
-                        <span class="room-zone">{zoneName}</span>
+                        <span className="room-zone">{zoneName}</span>
                         {availability === 'checking' && <span>Checking availability...</span>}
                         {availability === "now" && <span className="available">Available Now</span>}
                         {availability === "soon" && <span>Available {availableIn}</span>}
@@ -31,7 +31,7 @@ const Room = ({ location, category, room }) => {
                     </div>
                 </div>
             </motion.a>
-            <div class="room-details">
+            <div className="room-details">
                 {description && parse(description)}
                 {cDescription && parse(cDescription)}
                 {lDescription && parse(lDescription)}

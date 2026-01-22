@@ -13,8 +13,8 @@ const Day = ({ date, selected, disabled, className, handleClick }) => {
             className={dayClass}
             onClick={handleClick}
         >
-            <span class="day-num">{date.format("D")}</span>
-            <span class="day-month">{date.format("MMM")}</span>
+            <span className="day-num">{date.format("D")}</span>
+            <span className="day-month">{date.format("MMM")}</span>
         </div>
     );
 }
