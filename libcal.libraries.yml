@@ -11,14 +11,15 @@ slick:
 
 # Block Plugins
 reserve_space:
-  version: VERSION
+  version: 1.0.0
   css:
     theme:
       dist/libcal-reserve.css: {}
   js:
     dist/libcal-reserve.min.js: { minified: true }
+
 spaces:
-  version: VERSION
+  version: 1.0.0
   css:
     theme:
       dist/libcal-spaces.css: {}
