@@ -21,15 +21,18 @@ const RoomSkeleton = () => {
                             <div className="room-name-skeleton"></div>
                         </h3>
                         <span className="room-zone">
+                            <span className="sr-only">Room zone</span>
                             <div className="room-zone-skeleton"></div>
                         </span>
-                        <span className="available">
+                        <span className="available sr-only">
+                            Room available
                         </span>
                     </div>
                 </div>
             </motion.a>
             <div className="room-details">
                 <p>
+                    <span className="sr-only">Room details</span>
                     <div className="room-details-skeleton"></div>
                     <div className="room-details-skeleton"></div>
                     <div className="room-details-skeleton"></div>
