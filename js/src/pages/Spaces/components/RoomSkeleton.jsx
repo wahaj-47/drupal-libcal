@@ -12,11 +12,11 @@ const RoomSkeleton = () => {
             >
                 <div className="room-header pointer">
                     <div className="room-image">
-                        <span className="sr-only">Loading room name</span>
                         <div className="room-image-skeleton"></div>
                     </div>
                     <div className="room-label">
                         <h3>
+                            <span className="sr-only">Loading room name</span>
                             <div className="room-name-skeleton"></div>
                         </h3>
                         <span className="room-zone">
