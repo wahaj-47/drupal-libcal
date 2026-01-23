@@ -22,6 +22,7 @@ const Room = ({ location, category, room }) => {
                         {image && <img src={image} className="preview-img"></img>}
                     </div>
                     <div className="room-label">
+                        <h2 className="sr-only">{groupName}</h2>
                         <h3>{name}</h3>
                         <span className="room-zone">{zoneName}</span>
                         {availability === 'checking' && <span>Checking availability...</span>}

@@ -15,8 +15,9 @@ const RoomSkeleton = () => {
                         <div className="room-image-skeleton"></div>
                     </div>
                     <div className="room-label">
+                        <h2 className="sr-only">Loading</h2>
                         <h3>
-                            <span className="sr-only">Loading room name</span>
+                            <span className="sr-only">Room name</span>
                             <div className="room-name-skeleton"></div>
                         </h3>
                         <span className="room-zone">
