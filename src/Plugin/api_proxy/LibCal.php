@@ -4,7 +4,6 @@ namespace Drupal\libcal\Plugin\api_proxy;
 
 use Drupal\api_proxy\Plugin\api_proxy\HttpApiCommonConfigs;
 use Drupal\api_proxy\Plugin\HttpApiPluginBase;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use GuzzleHttp\ClientInterface;
@@ -36,7 +35,7 @@ final class LibCal extends HttpApiPluginBase
     private $client;
 
     /**
-     * Translates between Symfony and PRS objects.
+     * Translates between Symfony and PSR objects.
      *
      * @var \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface
      */
