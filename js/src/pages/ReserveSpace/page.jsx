@@ -40,6 +40,8 @@ const stripHTML = (html) => {
   return tmp.textContent || tmp.innerText || "";
 }
 
+const settings = window.drupalSettings.libcal;
+
 const ReserveSpace = () => {
 
   const { data: locations = [] } = useLocations();
@@ -145,36 +147,67 @@ const ReserveSpace = () => {
   }, [room])
 
   const slots = useMemo(() => {
+    if (!room) return [];
+
+    let data = room.availability.filter((slot) => slot.from.isSame(selectedDate, "day")) ?? [];
+    if (!data.length) return [];
+
+    const closingTime = data[data.length - 1].to;
+    const closingBufferMinutes = settings.closingBufferMinutes[cid] ?? 0;
+    const bookingCutoff = dayjs(closingTime).subtract(closingBufferMinutes, "minutes");
+
+    data = data.filter((slot) => {
+      const hasNotStarted = slot.from.isSameOrAfter(dayjs());
+      const beforeCutoff = slot.from.isBefore(bookingCutoff)
+
+      return hasNotStarted && beforeCutoff;
+    });
+
+    // No selected slots yet
+    if (!selectedSlots.length) {
+      return data.map((slot) => ({
+        ...slot,
+        valid: true,
+      }));
+    }
+
     const sorted = selectedSlots
       .map((from) => dayjs(from))
-      .sort((a, b) => a.diff(b))
+      .sort((a, b) => a.diff(b));
 
     const first = sorted[0];
     const last = sorted[sorted.length - 1];
+
+    // Allow selecting the next consecutive hour
     const next = dayjs(last).add(60, "minutes");
+
+    // Max booking window = 3 hours from first slot
     const max = dayjs(first).add(180, "minutes");
 
-    const data = room?.availability.filter((slot) =>
-      slot.from.isSame(selectedDate, "day")
-    ) ?? [];
-
+    // If there is only one slot available, mark it valid
     if (data.length === 1) {
-      data[0].valid = true;
-      return data;
+      return data.map((slot) => ({
+        ...slot,
+        valid: true,
+      }));
     }
 
-    data.forEach((slot, index) => {
-      data[index].valid = true;
+    return data.map((slot, index) => {
+      let valid = true;
 
-      if (first)
-        data[index].valid =
-          slot.from.isSameOrAfter(first, "minutes") &&
-          slot.to.isSameOrBefore(next, "minutes") &&
-          slot.to.isSameOrBefore(max, "minutes");
+      if (first) {
+        valid =
+          slot.from.isSameOrAfter(first, "minute") &&
+          slot.to.isSameOrBefore(next, "minute") &&
+          slot.to.isSameOrBefore(max, "minute");
+      }
+
+      return {
+        ...slot,
+        valid,
+      };
     });
-
-    return data;
-  }, [room, selectedDate, selectedSlots])
+  }, [room, selectedDate, selectedSlots]);
 
   if (!room) return null;
 
